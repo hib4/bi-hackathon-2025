@@ -24,7 +24,8 @@ register_tortoise(
 )
 
 if __name__ == "__main__":
-    print(settings)
+    for setting in settings:
+        print(setting)
 
     uvicorn.run(
         "main:app", 

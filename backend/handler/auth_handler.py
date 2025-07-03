@@ -1,10 +1,10 @@
 from fastapi import HTTPException
 from models import User
-from schema.authSchema import loginSchema,registerSchema
+from schema.auth_schema import login_schema,register_schema
 from utils.hash import hash,compare
-from utils.jwt import createAccessToken
+from utils.jwt import create_access_token
 
-async def register(body: registerSchema):
+async def register(body: register_schema):
 
     is_user_with_email_exist = await User.get_or_none(email=body.email)
     if is_user_with_email_exist:
@@ -24,7 +24,7 @@ async def register(body: registerSchema):
         }
     }
 
-async def login(body: loginSchema):
+async def login(body: login_schema):
     user = await User.get_or_none(email=body.email)
     
     if not user:
@@ -35,7 +35,7 @@ async def login(body: loginSchema):
     if not isMatch:
         raise HTTPException(status_code= 401, detail= "Password in correct")
 
-    token = createAccessToken(user)
+    token = create_access_token(user)
 
     return {
         "token": token

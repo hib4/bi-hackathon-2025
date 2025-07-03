@@ -1,9 +1,9 @@
-from .router import router as gptRouter
-from .authRouter import router as authRouter
-from .userRouter import router as userRouter
+from .auth_router import router as auth_router
+from .user_router import router as user_router
+from .book_router import router as book_router
 
 routers = [
-    gptRouter,
-    authRouter,
-    userRouter
+    auth_router,
+    user_router,
+    book_router
 ]

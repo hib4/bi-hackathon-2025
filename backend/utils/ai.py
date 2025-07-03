@@ -1,6 +1,7 @@
 from fastapi.concurrency import run_in_threadpool
 from settings import settings
 from openai import OpenAI
+import json
 
 SEALION_HOST = "https://api.sea-lion.ai/v1"
 SEALION_MODEL = "aisingapore/Llama-SEA-LION-v3-70B-IT"
@@ -94,7 +95,13 @@ def _ask_sync(prompt: str) -> str:
         messages=[{"role": "user", "content": prompt}],
         temperature=SEALION_TEMPERATURE
     )
-    return response.choices[0].message.content
+    text_response = response.choices[0].message.content
+    json_string = text_response
 
-async def askSealion(prompt: str) -> str:
+    if "```json" in json_string or "```" in json_string:
+        json_string = json_string.replace("```json", "").replace("```", "").strip()
+        
+    return json.loads(json_string)
+
+async def ask_sealion(prompt: str) -> str:
     return await run_in_threadpool(_ask_sync, prompt)

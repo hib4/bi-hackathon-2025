@@ -7,7 +7,7 @@ JWT_SECRET = settings.JWT_SECRET
 ALGORITHM = "HS256"
 JWT_EXPIRED = 60 * settings.JWT_EXPIRED
 
-def createAccessToken(user: User):
+def create_access_token(user: User):
     data = {
         "id": str(user.id),
         "name": user.name,
@@ -22,7 +22,7 @@ def createAccessToken(user: User):
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, JWT_SECRET, algorithm=ALGORITHM)
 
-def verifyToken(token: str):
+def verify_token(token: str):
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM])
         return payload
