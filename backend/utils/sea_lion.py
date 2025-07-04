@@ -89,7 +89,7 @@ def get_prompt_schema(description, language, length):
         }}
     """
 
-def _ask_sync(prompt: str) -> str:
+def _ask_sync(prompt: str) -> dict:
     response = client.chat.completions.create(
         model=SEALION_MODEL,
         messages=[{"role": "user", "content": prompt}],
@@ -103,5 +103,5 @@ def _ask_sync(prompt: str) -> str:
         
     return json.loads(json_string)
 
-async def ask_sealion(prompt: str) -> str:
+async def ask_sealion(prompt: str) -> dict:
     return await run_in_threadpool(_ask_sync, prompt)

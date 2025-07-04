@@ -8,3 +8,6 @@ class register_schema(BaseModel):
 class login_schema(BaseModel):
     email: str
     password: str
+
+class google_login_schema(BaseModel):
+    id_token: str

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from middleware.auth_middleware import get_current_user
-from schema.book_schema import create_book_schema
+from schema.request.book_schema import create_book_schema
 from handler import book_handler
 
 router = APIRouter()
