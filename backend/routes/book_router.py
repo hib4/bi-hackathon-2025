@@ -11,3 +11,16 @@ async def register(
     current_user = Depends(get_current_user)
 ):
     return await book_handler.create_book(body, current_user)
+
+@router.get("/api/v1/books", status_code=200)
+async def get_books(
+    current_user = Depends(get_current_user)
+):
+    return await book_handler.get_books(current_user)
+
+@router.get("/api/v1/book/{id}", status_code=200)
+async def get_book_by_id(
+    id: str,
+    current_user = Depends(get_current_user)
+):
+    return await book_handler.get_book_by_id(id,current_user)
