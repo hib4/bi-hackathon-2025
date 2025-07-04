@@ -1,0 +1,207 @@
+{
+    "_id": "story_002",
+    "user_id": "user_123",
+    "title": "Sari dan Uang Kembalian",
+    "theme": [
+        "kejujuran",
+        "berbelanja"
+    ],
+    "age_group": "8-10",
+    "language": "indonesian",
+    "status": "finished",
+    "current_scene": 7,
+    "started_at": "2025-01-15T10:00:00Z",
+    "finished_at": "2025-01-15T10:25:00Z",
+    "maximum_point": 100,
+    "story_flow": {
+        "total_scene": 10,
+        "decision_point": [
+            2,
+            4,
+            6
+        ],
+        "ending": [
+            7,
+            8,
+            9,
+            10
+        ]
+    },
+    "characters": [
+        {
+            "name": "Sari",
+            "age": 10,
+            "description": "A cheerful 10-year-old Indonesian girl with long straight black hair in a ponytail. She has warm brown eyes, a bright smile, and olive-toned skin. Usually wears a colorful elementary school uniform (white shirt with red and white striped skirt) or casual Indonesian children's clothing. She has an expressive, thoughtful face that shows her emotions clearly - curiosity, concern, or happiness."
+        },
+        {
+            "name": "Mama Sari",
+            "age": 35,
+            "description": "A warm, caring Indonesian mother in her mid-30s with shoulder-length black hair, often tied back neatly. She has kind brown eyes and a gentle smile. Wears modest, traditional Indonesian clothing like batik blouses or simple dresses. Has a nurturing, patient demeanor and often shown in domestic settings like the kitchen or living room."
+        },
+        {
+            "name": "Pak Budi",
+            "age": 45,
+            "description": "A friendly, middle-aged Indonesian man who owns a small warung (traditional shop). He has slightly graying black hair, a mustache, and warm brown eyes. Wears casual Indonesian clothing like polo shirts or button-up shirts. Has a round, friendly face with laugh lines around his eyes. Often seen behind the warung counter surrounded by everyday items like snacks, cooking oil, and household goods."
+        }
+    ],
+    "scene": [
+        {
+            "scene_id": 1,
+            "type": "narrative",
+            "img_url": null,
+            "img_description": "A cheerful 10-year-old Indonesian girl with long black hair in a ponytail, wearing a colorful school uniform, standing next to her mother in a cozy Indonesian kitchen. The mother is handing her daughter money (Indonesian Rupiah notes) while smiling warmly. Traditional Indonesian kitchen items visible in the background.",
+            "voice_url": null,
+            "content": "Sari berusia 10 tahun dan sangat rajin membantu mama berbelanja. Hari ini, mama meminta Sari membeli minyak goreng di warung Pak Budi. Mama memberikan uang Rp 20.000 untuk membeli minyak seharga Rp 15.000."
+        },
+        {
+            "scene_id": 2,
+            "type": "decision_point",
+            "img_url": null,
+            "img_description": "A small Indonesian warung (traditional shop) with wooden shelves filled with everyday items like cooking oil, snacks, and household goods. A middle-aged Indonesian man (Pak Budi) is busy serving multiple customers while a young girl (Sari) stands at the counter looking at money in her hand with a thoughtful expression. The scene shows the bustling atmosphere of a neighborhood warung.",
+            "voice_url": null,
+            "content": "Di warung, Pak Budi sedang sibuk melayani banyak pembeli. Saat memberikan kembalian, Pak Budi terburu-buru dan salah menghitung. Dia memberikan kembalian Rp 10.000 padahal seharusnya hanya Rp 5.000. Sari menyadari kesalahan ini. Apa yang sebaiknya Sari lakukan?",
+            "branch": [
+                {
+                    "choice": "baik",
+                    "teks": "Memberitahu Pak Budi bahwa kembaliannya kelebihan",
+                    "moral_value": "kejujuran",
+                    "point": 50,
+                    "next_scene": 3
+                },
+                {
+                    "choice": "buruk",
+                    "teks": "Diam saja dan menyimpan kelebihan uang",
+                    "moral_value": "ketidakjujuran",
+                    "point": 0,
+                    "next_scene": 5
+                }
+            ],
+            "selected_choice": "baik"
+        },
+        {
+            "scene_id": 3,
+            "type": "narrative",
+            "img_url": null,
+            "img_description": "Sari politely returning money to Pak Budi at the warung counter. Pak Budi looks surprised but pleased, with a big smile on his face. Other customers in the background are watching approvingly. The scene conveys warmth and community appreciation for honesty. Indonesian Rupiah notes are visible being exchanged.",
+            "voice_url": null,
+            "content": "'Pak Budi, maaf kembaliannya kelebihan,' kata Sari sambil mengembalikan Rp 5.000. Pak Budi terkejut dan mengecek kembali. 'Wah, terima kasih Sari! Kamu anak yang jujur sekali!' puji Pak Budi dengan senyum lebar. Beberapa pembeli lain yang melihat juga ikut memuji Sari."
+        },
+        {
+            "scene_id": 4,
+            "type": "decision_point",
+            "img_url": null,
+            "img_description": "Pak Budi offering colorful Indonesian candies to Sari while talking to her with a grateful expression. The warung setting shows a friendly, family-like atmosphere. Sari looks thoughtful as she considers the job offer, with her hand near her chin in a thinking pose. The scene suggests opportunity and decision-making.",
+            "voice_url": null,
+            "content": "Pak Budi sangat terkesan dengan kejujuran Sari. 'Sari, sebagai terima kasih, Pak Budi mau memberikan permen gratis untuk kamu,' kata Pak Budi sambil menawarkan permen. 'Tapi Pak Budi juga mau tanya, apa kamu mau membantu Pak Budi jaga warung setiap weekend? Pak Budi akan bayar Rp 10.000 per hari.' Apa yang akan Sari lakukan?",
+            "branch": [
+                {
+                    "choice": "baik",
+                    "teks": "Menerima tawaran kerja dan minta izin mama dulu",
+                    "moral_value": "tanggung jawab",
+                    "point": 50,
+                    "next_scene": 7
+                },
+                {
+                    "choice": "buruk",
+                    "teks": "Menolak karena ingin main saja di weekend",
+                    "moral_value": "kehilangan kesempatan",
+                    "point": 10,
+                    "next_scene": 8
+                }
+            ],
+            "selected_choice": "baik"
+        },
+        {
+            "scene_id": 5,
+            "type": "narrative",
+            "img_url": null,
+            "img_description": "Sari walking home alone on a typical Indonesian neighborhood street, looking conflicted. She's holding extra money in her hand but her facial expression shows guilt and uncertainty. Indonesian houses with terracotta roofs and tropical plants line the street. The mood is contemplative and slightly troubled.",
+            "voice_url": null,
+            "content": "Sari memutuskan untuk diam dan menyimpan kelebihan uang Rp 5.000. Dia pulang dengan perasaan senang karena punya uang ekstra. Tapi sepanjang jalan pulang, Sari merasa ada yang mengganjal di hatinya. Dia terus memikirkan wajah ramah Pak Budi yang selalu baik kepada keluarganya."
+        },
+        {
+            "scene_id": 6,
+            "type": "decision_point",
+            "img_url": null,
+            "img_description": "Sari at home in a cozy Indonesian living room, sitting across from her mother who is asking about her shopping trip. Sari looks nervous and conflicted, with her hand in her pocket where the extra money is hidden. The mother appears caring and attentive. Traditional Indonesian home decor visible in the background.",
+            "voice_url": null,
+            "content": "Di rumah, mama bertanya, 'Bagaimana belanja dengan Pak Budi tadi?' Sari bingung. Dia melihat uang kelebihan Rp 5.000 di sakunya. Apakah dia harus bercerita jujur kepada mama tentang uang kelebihan ini?",
+            "branch": [
+                {
+                    "choice": "baik",
+                    "teks": "Bercerita jujur kepada mama dan minta diantar kembali ke warung",
+                    "moral_value": "mengakui kesalahan",
+                    "point": 30,
+                    "next_scene": 9
+                },
+                {
+                    "choice": "buruk",
+                    "teks": "Berbohong kepada mama dan menyimpan uang itu",
+                    "moral_value": "tidak mengakui kesalahan",
+                    "point": -10,
+                    "next_scene": 10
+                }
+            ],
+            "selected_choice": null
+        },
+        {
+            "scene_id": 7,
+            "type": "ending",
+            "img_url": null,
+            "img_description": "A happy ending scene showing Sari proudly working at Pak Budi's warung, helping customers with a big smile. She's wearing a small apron and organizing items on shelves. Pak Budi is in the background, looking proud. The scene shows growth, responsibility, and positive community relationships. Money and a small notebook for tracking earnings are visible on the counter.",
+            "voice_url": null,
+            "content": "Sari pulang dengan bangga dan menceritakan semuanya kepada mama. Mama sangat bangga dengan kejujuran Sari. Setelah minta izin mama, Sari mulai membantu Pak Budi setiap weekend. Dalam sebulan, Sari sudah mengumpulkan Rp 80.000 dari hasil kerja jujurnya. Pak Budi juga sering menceritakan kejujuran Sari kepada pelanggan lain, sehingga Sari menjadi anak yang dipercaya di kampung.",
+            "lesson_learned": "Kejujuran membawa berkah dan membuka peluang baru"
+        },
+        {
+            "scene_id": 8,
+            "type": "ending",
+            "img_url": null,
+            "img_description": "Sari and Pak Budi having a gentle conversation at the warung. Pak Budi is speaking kindly to Sari, who looks a bit disappointted but understanding. The scene conveys respect and dignity despite the missed opportunity. The warung setting remains warm and friendly, showing that good relationships are maintained regardless of the decision.",
+            "voice_url": null,
+            "content": "Meskipun Sari menolak tawaran kerja, Pak Budi tetap menghargai kejujurannya. 'Tidak apa-apa Sari, yang penting kamu sudah jujur tadi. Itu lebih berharga daripada uang,' kata Pak Budi. Sari pulang dengan pelajaran bahwa kejujuran selalu dihargai, meskipun dia melewatkan kesempatan untuk mendapat uang saku tambahan.",
+            "lesson_learned": "Kejujuran tetap bernilai meskipun melewatkan kesempatan"
+        },
+        {
+            "scene_id": 9,
+            "type": "ending",
+            "img_url": null,
+            "img_description": "A redemption scene showing Sari and her mother returning to Pak Budi's warung together. Sari is apologetically returning the extra money while her mother stands supportively beside her. Pak Budi looks understanding and forgiving. The scene emphasizes family support, second chances, and the courage to make things right.",
+            "voice_url": null,
+            "content": "Mama terkejut mendengar cerita Sari, tapi bangga karena Sari akhirnya jujur. Mereka berdua pergi ke warung Pak Budi. Sari meminta maaf dan mengembalikan uang kelebihan. Pak Budi memaafkan Sari dan berkata, 'Yang penting kamu sudah berani jujur sekarang. Itu butuh keberanian besar!' Sari belajar bahwa tidak pernah terlambat untuk berbuat jujur.",
+            "lesson_learned": "Tidak pernah terlambat untuk berbuat jujur"
+        },
+        {
+            "scene_id": 10,
+            "type": "ending",
+            "img_url": null,
+            "img_description": "A somber scene showing Sari looking sad and regretful at home. Her mother appears disappointted and concerned, with a serious expression. The home atmosphere feels tense and uncomfortable. Sari's body language shows shame and regret, sitting with her head down. The scene illustrates the consequences of dishonesty on family relationships.",
+            "voice_url": null,
+            "content": "Sari memutuskan untuk berbohong kepada mama. Dia menyimpan uang kelebihan itu dan bercerita seolah-olah tidak terjadi apa-apa. Tapi beberapa hari kemudian, Pak Budi bertemu mama dan menceritakan tentang uang kembalian yang hilang. Mama jadi tahu kebohongan Sari. Sari kehilangan kepercayaan mama dan merasa sangat menyesal.",
+            "lesson_learned": "Kebohongan akan terbongkar dan merugikan diri sendiri"
+        }
+    ],
+    "user_story": {
+        "visited_scene": [
+            1,
+            2,
+            3,
+            4,
+            7
+        ],
+        "choices": [
+            {
+                "scene_id": 2,
+                "choice": "baik",
+                "point": 50
+            },
+            {
+                "scene_id": 4,
+                "choice": "baik",
+                "point": 40
+            }
+        ],
+        "total_point": 90,
+        "finished_time": 1500
+    }
+}
