@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from middleware.auth_middleware import get_current_user
-from utils.flux_1_schnell import generate_image
+from utils.ai.flux_1_schnell import generate_image
 router = APIRouter()
 
 @router.get("/api/v1/test")

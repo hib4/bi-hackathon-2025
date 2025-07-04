@@ -1,8 +1,7 @@
 from fastapi import HTTPException
 from schema.request import book_schema
 from models.book import Book
-from utils.sea_lion import get_prompt_schema,ask_sealion
-from utils.flux_1_schnell import generate_multiple_image
+from utils.ai.concurrent import generate_multiple_image_and_voice_concurrently
 import json
 
 dummy_scene_json = None
@@ -30,12 +29,39 @@ async def create_book(body: book_schema.create_book_schema, current_user):
         user_story= dummy_scene_json.get("user_story")
     )
 
-    await book.insert()
+    #await book.insert()
+
+    scenes = book.scene
+
+    extracted_scenes = [
+        {
+            "scene_id": scene.get("scene_id"),
+            "img_description": scene.get("img_description"),
+            "content": scene.get("content")
+        }
+        for scene in scenes
+    ]
+
+    requests = []
+    for extracted_scene in extracted_scenes:
+        requests.append({
+            "scene_id": extracted_scene.get("scene_id"),
+            "type": "image",
+            "prompt": extracted_scene.get("img_description")
+        })
+        requests.append({
+            "scene_id": extracted_scene.get("scene_id"),
+            "type": "voice",
+            "prompt": extracted_scene.get("content")
+        })
+
+    result = await generate_multiple_image_and_voice_concurrently(requests)
 
     return {
         "message": "successfully create new book",
         "data":{
-            "id": str(book.id)
+            "result": result
+            #"id": str(book.id)
         }
     }
 

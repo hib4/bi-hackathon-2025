@@ -1,7 +1,6 @@
 from fastapi.concurrency import run_in_threadpool
 from openai import OpenAI
 from settings import settings
-import asyncio
 import json
 
 FLUX_1_SCHNELL_HOST = "https://api.studio.nebius.com/v1/"
@@ -13,7 +12,7 @@ client = OpenAI(
 )
 
 def _generate_image(image_prompt):
-    key = image_prompt.get("key")
+    scene_id = image_prompt.get("scene_id")
     prompt = image_prompt.get("prompt")
 
     response = client.images.generate(
@@ -28,19 +27,15 @@ def _generate_image(image_prompt):
             "seed": -1,
             "loras": None
         },
-        prompt= f"{prompt} cartoon style, used for kids"
+        prompt= f"{prompt}. Explcit instruction: cartoon style, used for kids, be family friendly"
     )
     image_result = json.loads(response.to_json())
+    print(image_result)
     return { 
-        "key": key,
-        "image": image_result.get("data").get("b64_json") 
+        "scene_id": scene_id,
+        "type": "image",
+        "image": image_result.get("data") 
     }
 
 async def generate_image(image_prompt):
     return await run_in_threadpool(_generate_image, image_prompt)
-
-async def generate_multiple_image(image_prompts):
-    tasks = []
-    for image_prompt in image_prompts:
-        tasks.append(generate_image(image_prompt))
-    return await asyncio.gather(*tasks)
