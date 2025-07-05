@@ -1,0 +1,6 @@
+- Pengertian uang: anak-anak perlu belajar tentang apa itu uang dan fungsi dari uang.
+- Mengenali kebutuhan (needs) dan keinginan (wants): anak-anak perlu belajar membedakan antara kebutuhan dan keinginan.
+- Pengelolaan uang: anak-anak perlu belajar tentang cara mengelola uang dengan baik, seperti menabung, mengelola pengeluaran, dan menghindari pemborosan.
+- Menabung: anak-anak perlu belajar tentang pentingnya menabung untuk memenuhi tujuan keuangannya.
+- Belanja: anak-anak perlu belajar tentang cara berbelanja dan melakukan transaksi secara bijak, seperti membandingkan harga dan membeli barang yang diperlukan saja.
+- Kewaspadaan terhadap penipuan: anak-anak perlu belajar tentang cara menghindari penipuan keuangan dan bagaimana melaporkannya jika terjadi
