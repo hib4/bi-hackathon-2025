@@ -7,11 +7,11 @@ class Book(Document):
     user_id: str
     title: str
     theme: list
-    age_group: str
     language: str
     status: str
+    age_group: str
     current_scene: int
-    started_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
+    created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
     finished_at: Optional[datetime] = None
     maximum_point: int
     story_flow: dict
