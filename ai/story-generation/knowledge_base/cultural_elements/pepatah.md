@@ -1,0 +1,3 @@
+- Hemat Pangkal Kaya: Pepatah ini umum diajarkan sejak anak-anak, artinya berhemat (tidak boros) dapat membawa keberhasilan finansial di masa depan. Sikap mengontrol diri dan menunda keinginan sesuai ajaran pepatah tersebut membantu anak belajar mengatur pengeluaran.
+- Sedikit-sedikit Lama Menjadi Bukit: Ungkapan ini berarti sesuatu yang dicapai sedikit demi sedikit pada akhirnya akan terwujud. Dalam konteks keuangan, ini mengajarkan anak bahwa tabungan kecil yang rutin dapat menjadi besar seiring waktu.
+- Sedia Payung Sebelum Hujan: Pepatah kesiapsiagaan ini mengajarkan pentingnya menyiapkan dana darurat atau tabungan untuk keperluan tak terduga. Anak-anak dapat diajari bahwa memiliki “cadangan uang” untuk keadaan darurat adalah perilaku finansial bijak.
