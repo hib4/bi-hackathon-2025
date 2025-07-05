@@ -17,7 +17,7 @@ def _generate_image(image_prompt):
 
     response = client.images.generate(
         model=FLUX_1_SCHNELL_MODEL,
-        response_format="b64_json",
+        response_format="url",
         extra_body={
             "response_extension": "png",
             "width": 1024,
@@ -29,12 +29,14 @@ def _generate_image(image_prompt):
         },
         prompt= f"{prompt}. Explcit instruction: cartoon style, used for kids, be family friendly"
     )
-    image_result = json.loads(response.to_json())
-    print(image_result)
+    json_result = json.loads(response.to_json())
+    image_result = json_result.get("data")[0]
+    b64_string = image_result.get("b64_json")
+    url = image_result.get("url")
     return { 
         "scene_id": scene_id,
         "type": "image",
-        "image": image_result.get("data") 
+        "image": b64_string or url
     }
 
 async def generate_image(image_prompt):
