@@ -1,20 +1,35 @@
+from utils.ai.concurrent import generate_multiple_image_and_voice_concurrently
+from utils.api_request import get
 from fastapi import HTTPException
+from settings import settings
 from schema.request import book_schema
+from schema.response.book_card import Book_Card
 from collections import defaultdict
 from models.book import Book
-from utils.ai.concurrent import generate_multiple_image_and_voice_concurrently
 import json
 
 dummy_scene_json = None
 with open("./handler/scene_sample.json", "r", encoding="utf-8") as f:
     dummy_scene_json = json.load(f)
 
+book_stort_generation_url = settings.BOOK_STORY_GENERATION_URL
+
 async def create_book(body: book_schema.create_book_schema, current_user):
     prompt = body.prompt
     language = body.language
 
-    # fetch to scene builder ai
+    # dummy respond
     book = dummy_scene_json
+
+    # fetch to book_stort_generation_url
+    # book = await get(
+    #     url= book_stort_generation_url,
+    #     body= {
+    #         "prompt": prompt,
+    #         "language": language,
+    #         "age": 7
+    #     }
+    # )
 
     scenes = book.get("scene")
 
@@ -68,7 +83,6 @@ async def create_book(body: book_schema.create_book_schema, current_user):
         language= book.get("language"),
         status= book.get("status"),
         current_scene= book.get("current_scene"),
-        started_at= book.get("started_at"),
         finished_at= book.get("finished_at"),
         maximum_point= book.get("maximum_point"),
         story_flow= book.get("story_flow"),
@@ -82,7 +96,6 @@ async def create_book(body: book_schema.create_book_schema, current_user):
     return {
         "message": "successfully create new book",
         "data":{
-            # "result": book
             "id": str(new_book.id)
         }
     }
@@ -90,7 +103,7 @@ async def create_book(body: book_schema.create_book_schema, current_user):
 async def get_books(current_user):
     books = await Book.find(Book.user_id == current_user.get("id")).to_list()
     return {
-        "data": books
+        "data": _format_book_cards(books)
     }
 
 async def get_book_by_id(id: str, current_user):
@@ -105,3 +118,18 @@ async def get_book_by_id(id: str, current_user):
     return {
         "data": dummy_scene_json
     }
+
+def _format_book_cards(books: list) -> list:
+    book_cards = []
+    for book in books:
+        book_card = Book_Card(
+            id= str(book.id),
+            title= book.title,
+            short_description= book.title, # TODO switch to real description
+            language= book.language,
+            img_cover_url="",
+            Estimation_time_to_read="43 minutes",
+            created_at= str(book.created_at)
+        )
+        book_cards.append(book_card)
+    return book_cards
