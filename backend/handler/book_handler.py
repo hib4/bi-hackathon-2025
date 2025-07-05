@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from schema.request import book_schema
+from collections import defaultdict
 from models.book import Book
 from utils.ai.concurrent import generate_multiple_image_and_voice_concurrently
 import json
@@ -12,26 +13,10 @@ async def create_book(body: book_schema.create_book_schema, current_user):
     prompt = body.prompt
     language = body.language
 
-    book = Book(
-        user_id= current_user.get("id"),
-        title= dummy_scene_json.get("title"),
-        theme= dummy_scene_json.get("theme"),
-        age_group= dummy_scene_json.get("age_group"),
-        language= dummy_scene_json.get("language"),
-        status= dummy_scene_json.get("status"),
-        current_scene= dummy_scene_json.get("current_scene"),
-        started_at= dummy_scene_json.get("started_at"),
-        finished_at= dummy_scene_json.get("finished_at"),
-        maximum_point= dummy_scene_json.get("maximum_point"),
-        story_flow= dummy_scene_json.get("story_flow"),
-        characters= dummy_scene_json.get("characters"),
-        scene= dummy_scene_json.get("scene"),
-        user_story= dummy_scene_json.get("user_story")
-    )
+    # fetch to scene builder ai
+    book = dummy_scene_json
 
-    #await book.insert()
-
-    scenes = book.scene
+    scenes = book.get("scene")
 
     extracted_scenes = [
         {
@@ -57,11 +42,48 @@ async def create_book(body: book_schema.create_book_schema, current_user):
 
     result = await generate_multiple_image_and_voice_concurrently(requests)
 
+    scene_data = defaultdict(list)
+    for item in result:
+        scene_data[item["scene_id"]].append(item)
+
+    for scene in book.get("scene"):
+        scene_id = scene.get("scene_id")
+
+        items = scene_data.get(scene_id, [])
+
+        image_url = next((i["image"] for i in items if i["type"] == "image"), None)
+        voice_url = next((i["voice"] for i in items if i["type"] == "voice"), None)
+        
+        if image_url:
+            scene["img_url"] = image_url
+
+        if voice_url:
+            scene["voice_url"] = voice_url
+
+    new_book = Book(
+        user_id= current_user.get("id"),
+        title= book.get("title"),
+        theme= book.get("theme"),
+        age_group= book.get("age_group"),
+        language= book.get("language"),
+        status= book.get("status"),
+        current_scene= book.get("current_scene"),
+        started_at= book.get("started_at"),
+        finished_at= book.get("finished_at"),
+        maximum_point= book.get("maximum_point"),
+        story_flow= book.get("story_flow"),
+        characters= book.get("characters"),
+        scene= book.get("scene"),
+        user_story= book.get("user_story")
+    )
+
+    await new_book.insert()
+
     return {
         "message": "successfully create new book",
         "data":{
-            "result": result
-            #"id": str(book.id)
+            # "result": book
+            "id": str(new_book.id)
         }
     }
 
@@ -75,6 +97,11 @@ async def get_book_by_id(id: str, current_user):
     book = await Book.get(id)
     if not book:
         raise HTTPException(status_code= 404, detail= f"book with id {id} not found")
+    
+    user_id = current_user.get("id")
+    if book.user_id != user_id:
+        raise HTTPException(status_code= 403, detail= f"book with id {id} not belong to user with id ${user_id}")
+
     return {
         "data": dummy_scene_json
     }
