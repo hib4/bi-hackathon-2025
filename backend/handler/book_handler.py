@@ -6,6 +6,7 @@ from schema.request import book_schema
 from schema.response.book_card import Book_Card
 from collections import defaultdict
 from models.book import Book
+from datetime import timedelta
 import json
 
 dummy_scene_json = None
@@ -116,7 +117,7 @@ async def get_book_by_id(id: str, current_user):
         raise HTTPException(status_code= 403, detail= f"book with id {id} not belong to user with id ${user_id}")
 
     return {
-        "data": dummy_scene_json
+        "data": book
     }
 
 def _format_book_cards(books: list) -> list:
@@ -128,8 +129,24 @@ def _format_book_cards(books: list) -> list:
             short_description= book.title, # TODO switch to real description
             language= book.language,
             img_cover_url="",
-            Estimation_time_to_read="43 minutes",
+            Estimation_time_to_read= "43 minutes",
             created_at= str(book.created_at)
         )
         book_cards.append(book_card)
     return book_cards
+
+def _time_estimation_format(duration: timedelta):
+    total_seconds = int(duration.total_seconds())
+
+    hours,reminder = divmod(total_seconds,3600)
+    minutes,seconds = divmod(reminder,60)
+
+    time_estimate = ""
+
+    if not hours:
+        time_estimate += f"{hours} hours"
+    if not minutes:
+        time_estimate += f"{minutes} minutes"
+    if not seconds:
+        time_estimate += f"{seconds} seconds"
+    return time_estimate
