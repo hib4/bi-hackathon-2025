@@ -8,19 +8,27 @@ import base64
 
 speech_key = settings.MICROSOFT_AZURE_TEXT_TO_SPEECH_RESOURCE_KEY
 speech_endpoint = "https://eastasia.api.cognitive.microsoft.com/"
-speech_voice_name = "id-ID-GadisNeural"
+speech_voice_name = "en-US-JennyMultilingualNeural"
 folder_name = "voices"
 
 def _synthesize_speech(request) -> str:
     scene_id = request.get("scene_id")
     text_content = request.get("prompt")
-    
+
+    ssml = f"""
+    <speak version='1.0' xml:lang='id-ID'>
+        <voice name='{speech_voice_name}'>
+            <lang xml:lang='id-ID'>{text_content}</lang>
+        </voice>
+    </speak>
+    """
+
     speech_config = speechsdk.SpeechConfig(subscription=speech_key, endpoint=speech_endpoint)
     speech_config.speech_synthesis_voice_name = speech_voice_name
 
     speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=None)
 
-    result = speech_synthesizer.speak_text_async(text_content).get()
+    result = speech_synthesizer.speak_ssml_async(ssml).get()
 
     if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
         audio_data = result.audio_data
@@ -31,7 +39,7 @@ def _synthesize_speech(request) -> str:
 
         blob_url = upload_file_to_blob(
             base64_string=base64_audio, 
-            folder_name= folder_name,
+            folder_name=folder_name,
             blob_filename=filename
         )
 
@@ -47,7 +55,7 @@ def _synthesize_speech(request) -> str:
         if cancellation_details.reason == speechsdk.CancellationReason.Error:
             error_msg += f" — {cancellation_details.error_details}"
         print(error_msg)
-        raise HTTPException(status_code=500, detail="someting went wrong when Synthesizing voice")
+        raise HTTPException(status_code=500, detail="something went wrong when Synthesizing voice")
 
 async def synthesize_speech(request):
     return await run_in_threadpool(_synthesize_speech, request)

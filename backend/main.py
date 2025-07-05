@@ -2,11 +2,11 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
-
 from settings import settings
 from routes import routers
 from models.user import User
 from models.book import Book
+import uvicorn
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,7 +23,8 @@ for router in routers:
     app.include_router(router)
 
 if __name__ == "__main__":
-    import uvicorn
+    for setting in settings:
+        print(setting)
 
     uvicorn.run(
         "main:app",
