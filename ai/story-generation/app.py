@@ -59,6 +59,10 @@ class StoryResponse(BaseModel):
     characters: List[Character]
     scene: List[Scene]
     user_story: Dict[str, Any]
+    cover_img_url: Optional[str] = None
+    cover_img_description: Optional[str] = ""
+    description: str = "A story about financial literacy for children."
+    estimated_reading_time: int = 600  # Default to 5 minutes in seconds
 
 # Create FastAPI instance
 app = FastAPI(
@@ -121,6 +125,10 @@ def validate_story_content(story_data: dict, user_id: str, age: int):
         "maximum_point": 10,
         "characters": [],
         "scene": [],
+        "cover_img_url": None,
+        "cover_img_description": "",
+        "description": "A story about financial literacy for children.",
+        "estimated_reading_time": 3600
     }
     
     for field, default_value in required_top_level_fields.items():
@@ -166,7 +174,6 @@ def validate_story_content(story_data: dict, user_id: str, age: int):
             "img_description": "",
             "voice_url": None,
             "content": "",
-            "cover_img_url": None,
         }
         
         for field, default_value in scene_required_fields.items():

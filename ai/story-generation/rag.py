@@ -104,7 +104,7 @@ class FinancialLiteracyRAG:
                 "cover_img_url": None,
                 "cover_img_description": "<buat deskripsi gambar sampul dalam bahasa Inggris>",
                 "description": "<buat deskripsi cerita dalam bahasa Inggris>",
-                "estimated_reading_time": "<perkiraan waktu membaca dalam bahasa Indonesia (dalam detik)>",
+                "estimated_reading_time": "<perkiraan waktu membaca dalam bahasa Indonesia (dalam detik (integer))>",
                 "characters": [
                     {
                         "name": "<buat nama karakter dalam bahasa Indonesia>",
