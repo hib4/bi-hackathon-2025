@@ -50,7 +50,7 @@ class StoryResponse(BaseModel):
     tema: List[str]
     language: str
     status: str
-    age_group: str
+    age_group: int
     current_scene: int
     created_at: Optional[str] = None
     finished_at: Optional[str] = None
@@ -78,7 +78,7 @@ app.add_middleware(
 
 # Initialize your RAG system
 rag = FinancialLiteracyRAG(
-    data_dir='./data',
+    data_dir='./knowledge_base',
     persist_directory='./chroma_db'
 )
 rag.initialize_rag()
@@ -166,6 +166,7 @@ def validate_story_content(story_data: dict, user_id: str, age: int):
             "img_description": "",
             "voice_url": None,
             "content": "",
+            "cover_img_url": None,
         }
         
         for field, default_value in scene_required_fields.items():
@@ -278,7 +279,7 @@ async def generate_story(request: StoryRequest):
         prompt = rag.create_prompt(
             query=request.query,
             user_id=request.user_id,
-            age_group=convert_age_to_range(request.age),  # RAG expects range format
+            age=request.age,
         )
         
         # Get response from LLM

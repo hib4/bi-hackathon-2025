@@ -22,15 +22,51 @@ class FinancialLiteracyRAG:
         self.retriever = None
         self.qa_chain = None
 
-    def setup_vector_store(self, documents, top_k: int = 5):
+    def add_metadata(self, documents):
+        for doc in documents:
+            # Extract metadata from file path
+            file_path = doc.metadata.get("source", "")
+
+            # Age range detection based on file name
+            if "4_7.md" in file_path:
+                doc.metadata["age_range"] = "4-7"
+                doc.metadata["min_age"] = 4
+                doc.metadata["max_age"] = 7
+            elif "8_10.md" in file_path:
+                doc.metadata["age_range"] = "8-10"
+                doc.metadata["min_age"] = 8
+                doc.metadata["max_age"] = 10
+            elif "11_12.md" in file_path:
+                doc.metadata["age_range"] = "11-12"
+                doc.metadata["min_age"] = 11
+                doc.metadata["max_age"] = 12
+            else:
+                # For content without specific age (cultural, stories)
+                doc.metadata["age_range"] = "universal"
+                doc.metadata["min_age"] = 4
+                doc.metadata["max_age"] = 12
+
+            # Content type detection
+            if "cultural_elements" in file_path:
+                doc.metadata["content_type"] = "cultural"
+            elif "financial_concepts" in file_path:
+                doc.metadata["content_type"] = "financial"
+            elif "stories" in file_path:
+                doc.metadata["content_type"] = "story"
+
+    def setup_vector_store(self, documents, top_k: int = 10, chunk_size: int = 1000):
         """
         Create vector store and set up retriever
         """
+        # Add metadata to documents
+        self.add_metadata(documents)
+
         # Split documents into chunks
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500,
-            chunk_overlap=50,
-            separators=["\n\n", "\n", ".", "!", "?", ",", " ", "", "-"],
+            chunk_size=chunk_size,
+            chunk_overlap=100,
+            separators=["\n\n", "\n", "### ", "## ", "- ", ".", "!", "?", ",", " "],
+            length_function=len,
         )
 
         splits = text_splitter.split_documents(documents)
@@ -65,6 +101,10 @@ class FinancialLiteracyRAG:
                 "finished_at": None,
                 "maximum_point": "<jumlah poin maksimum akan diisi oleh LLM (integer)>",
                 "story_flow": {"total_scene": 0, "decision_point": [], "ending": []},
+                "cover_img_url": None,
+                "cover_img_description": "<buat deskripsi gambar sampul dalam bahasa Inggris>",
+                "description": "<buat deskripsi cerita dalam bahasa Inggris>",
+                "estimated_reading_time": "<perkiraan waktu membaca dalam bahasa Indonesia (dalam detik)>",
                 "characters": [
                     {
                         "name": "<buat nama karakter dalam bahasa Indonesia>",
@@ -147,7 +187,7 @@ class FinancialLiteracyRAG:
         Initialize the complete RAG system
         """
         print("Initializing RAG system...")
-        
+
         if os.path.exists(self.persist_directory):
             shutil.rmtree(self.persist_directory)
 
@@ -190,23 +230,71 @@ class FinancialLiteracyRAG:
         else:
             return "Gunakan struktur 5 scene default."
 
-    def create_prompt(self, query, user_id, age_group):
+    def filter_retrieved_docs(self, docs, age, k=5):
+        """
+        Filter and prioritize documents, prioritizing matching age group and financial concepts before cultural elements and stories.
+        """
+        # Priority 1: Exact age match
+        age_exact = [
+            doc
+            for doc in docs
+            if doc.metadata.get("min_age", 0) <= age <= doc.metadata.get("max_age", 12)
+        ]
+
+        # Priority 2: Financial concepts from adjacent age groups
+        financial_concepts = [
+            doc
+            for doc in docs
+            if doc.metadata.get("content_type") == "financial"
+            and doc not in age_exact
+            and abs(doc.metadata.get("min_age", age) - age) <= 3  # Within 3 years
+        ]
+
+        # Priority 3: Cultural elements and stories (universal content)
+        cultural_story = [
+            doc
+            for doc in docs
+            if doc.metadata.get("content_type") in ["cultural", "story"]
+            and doc not in age_exact
+        ]
+
+        # Priority 4: Everything else
+        other_content = [
+            doc
+            for doc in docs
+            if doc not in age_exact
+            and doc not in financial_concepts
+            and doc not in cultural_story
+        ]
+
+        # Combine with limits to ensure balance
+        prioritized_docs = (
+            age_exact[:3]  # Max 3 from exact age
+            + financial_concepts[:2]  # Max 2 from other financial
+            + cultural_story[:2]  # Max 2 cultural/story
+            + other_content  # Fill remaining
+        )[:k]
+
+
+        print(f"Filtering for age {age}:")
+        print(f"  Age-appropriate: {len(age_exact)}")
+        print(f"  Adjacent financial: {len(financial_concepts)}")
+        print(f"  Universal content: {len(other_content)}")
+        print(f"  Final selection: {len(prioritized_docs)} documents")
+        return prioritized_docs
+
+    def create_prompt(self, query, user_id, age: int):  # Change parameter to int
         output_format = self.build_output_format_template(
-            user_id=user_id, age_group=age_group
+            user_id=user_id, age_group=age  # Keep as int
         )
 
-        # Add rule-based structure guidance
-        if isinstance(age_group, str) and "-" in age_group:
-            age_num = int(age_group.split("-")[0])
-        else:
-            age_num = int(age_group)
-
-        structure_rules = self.build_story_structure_rules(age_num)
+        # Use age directly for structure rules
+        structure_rules = self.build_story_structure_rules(age)
 
         PROMPT_TEMPLATE = """
         You are an expert Indonesian storyteller specializing in teaching financial literacy to children.
 
-        Generate a JSON-formatted interactive story in **Bahasa Indonesia** for children aged {age_group}, with:
+        Generate a JSON-formatted interactive story in **Bahasa Indonesia** for children aged {age}, with:
         - Indonesian character names and culturally relevant settings (e.g., warung, pasar)
         - Age-appropriate financial literacy lessons (saving, budgeting, honesty, etc.)
         - Two decision points (unless otherwise noted), each with two choices, that affect the story ending
@@ -222,11 +310,12 @@ class FinancialLiteracyRAG:
         {structure_rules}
 
         ### General Instructions:
-        1. Use simple and engaging Indonesian suitable for age {age_group}
+        1. Use simple and engaging Indonesian suitable for age {age}
         2. Scene types must be: "narrative", "decision_point", or "ending"
         3. Choices should lead to consequences that are constructive but realistic
         4. Provide at least two different endings with different moral outcomes
         5. Do not include markdown or explanations—just clean JSON
+        6. For higher age groups (11 - 12), the decision points can be more like a quiz to test their understanding for the said concept
 
         ### Format:
         {output_format}
@@ -238,15 +327,17 @@ class FinancialLiteracyRAG:
             try:
                 context_docs = self.retriever.invoke(query)
                 print(f"Retrieved {len(context_docs)} relevant documents")
+
+                # Filter and prioritize documents based on age (now int)
+                prioritized_docs = self.filter_retrieved_docs(context_docs, age)
+
                 # Extract content from documents
-                context = [doc.page_content for doc in context_docs]
+                context = [doc.page_content for doc in prioritized_docs]
             except Exception as e:
                 print(f"Error retrieving documents: {e}")
                 context = ["Tidak ada konteks yang relevan ditemukan."]
         else:
-            print(
-                "Retriever not initialized. Make sure to call initialize_rag() first."
-            )
+            print("Retriever not initialized. Make sure to call initialize_rag() first.")
             context = ["Tidak ada konteks yang relevan ditemukan."]
 
         if not context:
@@ -258,7 +349,7 @@ class FinancialLiteracyRAG:
             context=context,
             query=query,
             output_format=output_format,
-            age_group=age_group,
+            age=age,  # Changed from age_group to age
             structure_rules=structure_rules,
         )
 
