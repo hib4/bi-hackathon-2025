@@ -1,13 +1,16 @@
 import httpx
 from typing import Optional, Dict, Any
 
+request_timeout = 60.0 # 60 sec
+
 async def get(url: str, body: Optional[Dict[str, Any]] = None):
     async with httpx.AsyncClient() as client:
         response = await client.get(url, params=body)
         return _handle_response(response)
 
 async def post(url: str, body: Optional[Dict[str, Any]] = None):
-    async with httpx.AsyncClient() as client:
+    timeout = httpx.Timeout(request_timeout)
+    async with httpx.AsyncClient(timeout=timeout) as client:
         response = await client.post(url, json=body)
         return _handle_response(response)
 

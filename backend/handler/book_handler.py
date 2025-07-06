@@ -1,5 +1,5 @@
 from utils.ai.concurrent import generate_multiple_image_and_voice_concurrently
-from utils.api_request import get
+from utils.api_request import post
 from fastapi import HTTPException
 from settings import settings
 from schema.request import book_schema
@@ -16,24 +16,20 @@ with open("./handler/scene_sample.json", "r", encoding="utf-8") as f:
 book_stort_generation_url = settings.BOOK_STORY_GENERATION_URL
 
 async def create_book(body: book_schema.create_book_schema, current_user):
-    prompt = body.prompt
-    language = body.language
-
-    # dummy respond
-    book = dummy_scene_json
+    query = body.query
+    age = body.age
 
     # fetch to book_stort_generation_url
-    # book = await get(
-    #     url= book_stort_generation_url,
-    #     body= {
-    #         "prompt": prompt,
-    #         "language": language,
-    #         "age": 7
-    #     }
-    # )
+    book = await post(
+        url= f"{book_stort_generation_url}/generate-story",
+        body= {
+            "query": query,
+            "user_id": current_user.get("id"),
+            "age": age
+        }
+    )
 
     scenes = book.get("scene")
-
     extracted_scenes = [
         {
             "scene_id": scene.get("scene_id"),
