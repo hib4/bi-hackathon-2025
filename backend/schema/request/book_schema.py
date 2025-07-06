@@ -13,8 +13,8 @@ class language_enum(str, Enum):
     INDONESIAN = "indonesian"
 
 class create_book_schema(BaseModel):
-    prompt: str
-    language: language_enum
+    query: str
+    age: int
 
 class get_book_by_id_schema(BaseModel):
     id: str
