@@ -6,7 +6,7 @@ from schema.request import book_schema
 from schema.response.book_card import Book_Card
 from collections import defaultdict
 from models.book import Book
-from datetime import timedelta
+from utils.ai.text_to_speech import AVAILABLE_VOICES
 import json
 
 dummy_scene_json = None
@@ -18,6 +18,10 @@ book_stort_generation_url = settings.BOOK_STORY_GENERATION_URL
 async def create_book(body: book_schema.create_book_schema, current_user):
     query = body.query
     age = body.age
+    voice_name_code = body.voice_name_code
+
+    if not voice_name_code in AVAILABLE_VOICES.keys():
+        raise HTTPException(status_code= 400, detail= f"invalid language_code")
 
     # fetch to book_stort_generation_url
     book = await post(
@@ -28,6 +32,8 @@ async def create_book(body: book_schema.create_book_schema, current_user):
             "age": age
         }
     )
+
+    # book = dummy_scene_json
 
     scenes = book.get("scene")
     extracted_scenes = [
@@ -40,6 +46,13 @@ async def create_book(body: book_schema.create_book_schema, current_user):
     ]
 
     requests = []
+
+    requests.append({
+        "scene_id": None,
+        "type": "cover_image",
+        "prompt": book.get("cover_img_description")
+    })
+
     for extracted_scene in extracted_scenes:
         requests.append({
             "scene_id": extracted_scene.get("scene_id"),
@@ -49,6 +62,7 @@ async def create_book(body: book_schema.create_book_schema, current_user):
         requests.append({
             "scene_id": extracted_scene.get("scene_id"),
             "type": "voice",
+            "voice_name_code": voice_name_code,
             "prompt": extracted_scene.get("content")
         })
 
@@ -63,6 +77,7 @@ async def create_book(body: book_schema.create_book_schema, current_user):
 
         items = scene_data.get(scene_id, [])
 
+        cover_image_url = next((i["cover_image"] for i in items if i["type"] == "cover_image"), None)
         image_url = next((i["image"] for i in items if i["type"] == "image"), None)
         voice_url = next((i["voice"] for i in items if i["type"] == "voice"), None)
         
@@ -72,10 +87,15 @@ async def create_book(body: book_schema.create_book_schema, current_user):
         if voice_url:
             scene["voice_url"] = voice_url
 
+        if cover_image_url:
+            book["cover_img_url"] = cover_image_url
+
     new_book = Book(
-        user_id= current_user.get("id"),
         title= book.get("title"),
-        theme= book.get("theme"),
+        cover_img_url= book.get("cover_img_url"),
+        description= book.get("description"),
+        estimated_reading_time= book.get("estimated_reading_time"),
+        theme= book.get("theme",None) or book.get("tema",None),
         age_group= book.get("age_group"),
         language= book.get("language"),
         status= book.get("status"),
@@ -85,7 +105,8 @@ async def create_book(body: book_schema.create_book_schema, current_user):
         story_flow= book.get("story_flow"),
         characters= book.get("characters"),
         scene= book.get("scene"),
-        user_story= book.get("user_story")
+        user_story= book.get("user_story"),
+        user_id= current_user.get("id")
     )
 
     await new_book.insert()
@@ -93,7 +114,8 @@ async def create_book(body: book_schema.create_book_schema, current_user):
     return {
         "message": "successfully create new book",
         "data":{
-            "id": str(new_book.id)
+            # "id": str(new_book.id)
+            "data": new_book
         }
     }
 
@@ -122,27 +144,27 @@ def _format_book_cards(books: list) -> list:
         book_card = Book_Card(
             id= str(book.id),
             title= book.title,
-            short_description= book.title, # TODO switch to real description
+            description= book.description,
             language= book.language,
-            img_cover_url="",
-            Estimation_time_to_read= "43 minutes",
+            cover_img_url= book.cover_img_url,
+            estimation_time_to_read= _time_estimation_format(book.estimated_reading_time),
             created_at= str(book.created_at)
         )
         book_cards.append(book_card)
     return book_cards
 
-def _time_estimation_format(duration: timedelta):
-    total_seconds = int(duration.total_seconds())
+def _time_estimation_format(duration: int) -> str:    
+    total_seconds = duration
 
-    hours,reminder = divmod(total_seconds,3600)
-    minutes,seconds = divmod(reminder,60)
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
 
-    time_estimate = ""
+    parts = []
+    if hours:
+        parts.append(f"{hours} hour{'s' if hours != 1 else ''}")
+    if minutes:
+        parts.append(f"{minutes} minute{'s' if minutes != 1 else ''}")
+    if seconds or not parts:  # Show 0 seconds if all others are zero
+        parts.append(f"{seconds} second{'s' if seconds != 1 else ''}")
 
-    if not hours:
-        time_estimate += f"{hours} hours"
-    if not minutes:
-        time_estimate += f"{minutes} minutes"
-    if not seconds:
-        time_estimate += f"{seconds} seconds"
-    return time_estimate
+    return " ".join(parts)

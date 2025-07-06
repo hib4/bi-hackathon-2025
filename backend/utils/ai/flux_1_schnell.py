@@ -16,8 +16,9 @@ client = OpenAI(
 )
 
 def _generate_image(image_prompt):
-    scene_id = image_prompt.get("scene_id")
+    scene_id = image_prompt.get("scene_id") or 1
     prompt = image_prompt.get("prompt")
+    image_type = image_prompt.get("type")
 
     response = client.images.generate(
         model=FLUX_1_SCHNELL_MODEL,
@@ -45,6 +46,13 @@ def _generate_image(image_prompt):
             folder_name=IMAGE_FOLDER_NAME,
             blob_filename= f"{unique_id}.png"
         )
+
+    if image_type == "cover_image":  
+        return {
+            "scene_id": scene_id,
+            "type": "cover_image",
+            "cover_image": url
+        }
 
     return { 
         "scene_id": scene_id,

@@ -15,6 +15,7 @@ class language_enum(str, Enum):
 class create_book_schema(BaseModel):
     query: str
     age: int
+    voice_name_code: str
 
 class get_book_by_id_schema(BaseModel):
     id: str
