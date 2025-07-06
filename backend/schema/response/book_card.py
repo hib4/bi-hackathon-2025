@@ -4,7 +4,7 @@ class Book_Card(BaseModel):
     id: str
     title: str
     language: str
-    short_description: str
-    Estimation_time_to_read: str
-    img_cover_url: str
+    description: str
+    estimation_time_to_read: str
+    cover_img_url: str | None
     created_at: str

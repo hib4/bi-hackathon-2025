@@ -1,216 +1,217 @@
 {
-  "data": {
-    "_id": "6869286cc4bcb82a4457ab34",
     "user_id": "686927e9c4bcb82a4457ab33",
-    "title": "Petualangan Sari di Warung Pak Budi",
-    "theme": [
-      "menabung",
-      "investasi",
-      "kejujuran"
+    "title": "Tina dan Uang Ajaib",
+    "tema": [
+        "financial literacy",
+        "kejujuran",
+        "menabung"
     ],
     "language": "indonesian",
     "status": "in_progress",
-    "age_group": "6-7",
+    "age_group": 8,
     "current_scene": 1,
-    "created_at": "2025-07-05T13:28:12.422000",
+    "created_at": null,
     "finished_at": null,
-    "maximum_point": 100,
+    "maximum_point": 5,
     "story_flow": {
-      "total_scene": 10,
-      "decision_point": [
-        2,
-        4,
-        6
-      ],
-      "ending": [
-        7,
-        8,
-        9,
-        10
-      ]
+        "total_scene": 10,
+        "decision_point": [
+            2,
+            4,
+            6
+        ],
+        "ending": [
+            7,
+            8,
+            9,
+            10
+        ]
     },
     "characters": [
-      {
-        "name": "Sari",
-        "description": "A cheerful and honest young girl with long black hair and curious eyes. She loves helping her parents at the warung and learning new things."
-      },
-      {
-        "name": "Pak Budi",
-        "description": "A kind and hardworking man who owns a small warung in the village. He is known for his honesty and generosity."
-      }
+        {
+            "name": "Tina",
+            "description": "Tina is a curious and kind-hearted 8-year-old girl with long black hair and bright eyes. She loves helping her parents at the local warung and learning new things."
+        },
+        {
+            "name": "Pak Budi",
+            "description": "Pak Budi is a friendly and hardworking warung owner, known for his generosity and cheerful demeanor. He is an important figure in the community."
+        }
     ],
     "scene": [
-      {
-        "scene_id": 1,
-        "type": "narrative",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/77bc8dbf-0afd-48f0-9576-5b2813d56a1d.png",
-        "img_description": "A small, cozy warung with shelves full of various goods and a smiling man behind the counter.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/655f48e2-afaa-48db-813b-93640e2e466b.wav",
-        "content": "Di sebuah desa kecil, ada seorang anak bernama Sari. Setiap hari, Sari membantu orang tuanya di warung milik Pak Budi. Warung ini selalu ramai karena Pak Budi terkenal jujur dan baik hati.",
-        "next_scene": 2,
-        "branch": null,
-        "lesson_learned": null,
-        "selected_choice": null
-      },
-      {
-        "scene_id": 2,
-        "type": "decision_point",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/bc313302-7103-4207-92a3-928e48bcd10d.png",
-        "img_description": "Sari looks at the money in her hand with a thoughtful expression as Pak Budi serves other customers.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/03db0bd1-f4b9-4a3b-ac13-8e881b65cc11.wav",
-        "content": "Di warung, Pak Budi sedang sibuk melayani banyak pembeli. Saat memberikan kembalian, Pak Budi terburu-buru dan salah menghitung. Dia memberikan kembalian Rp 10.000 padahal seharusnya hanya Rp 5.000. Sari menyadari kesalahan ini. Apa yang sebaiknya Sari lakukan?",
-        "next_scene": null,
-        "branch": [
-          {
-            "choice": "baik",
-            "teks": "Beritahu Pak Budi tentang kesalahan tersebut.",
-            "moral_value": "Kejujuran adalah hal yang penting.",
-            "point": 50,
-            "next_scene": 3
-          },
-          {
-            "choice": "buruk",
-            "teks": "Diam saja dan ambil uang lebihnya.",
-            "moral_value": "Mengambil yang bukan hak kita adalah salah.",
-            "point": -10,
-            "next_scene": 5
-          }
-        ],
-        "lesson_learned": null,
-        "selected_choice": null
-      },
-      {
-        "scene_id": 3,
-        "type": "narrative",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/0ac670ec-5898-481f-a3f5-1639d98dd024.png",
-        "img_description": "Pak Budi smiles warmly at Sari, showing gratitude.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/093e622e-9c6c-4e4d-8fd7-5bd86e048ec8.wav",
-        "content": "Sari berkata kepada Pak Budi, \"Pak Budi, uang kembaliannya kebanyakan.\" Pak Budi tersenyum dan berterima kasih pada Sari. \"Terima kasih, Sari. Kamu sangat jujur,\" katanya.",
-        "next_scene": 4,
-        "branch": null,
-        "lesson_learned": null,
-        "selected_choice": null
-      },
-      {
-        "scene_id": 4,
-        "type": "decision_point",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/1f5e77a0-0590-4cf2-a6b0-06289ea0601b.png",
-        "img_description": "Sari sees a beautiful toy on the shelf while holding her savings jar.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/0da3c581-dd17-4474-b156-af242c8df033.wav",
-        "content": "Saat Sari melihat-lihat barang di warung, dia melihat sebuah mainan yang sangat dia suka. Apakah Sari akan menggunakan tabungannya untuk membeli mainan tersebut atau menabung lebih banyak?",
-        "next_scene": null,
-        "branch": [
-          {
-            "choice": "baik",
-            "teks": "Lanjutkan menabung untuk masa depan.",
-            "moral_value": "Menabung untuk tujuan yang lebih besar adalah bijaksana.",
-            "point": 50,
-            "next_scene": 7
-          },
-          {
-            "choice": "buruk",
-            "teks": "Gunakan semua tabungan untuk membeli mainan.",
-            "moral_value": "Menghabiskan semua uang tanpa perencanaan bisa berisiko.",
-            "point": 10,
-            "next_scene": 8
-          }
-        ],
-        "lesson_learned": null,
-        "selected_choice": null
-      },
-      {
-        "scene_id": 5,
-        "type": "narrative",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/0037b4a1-ebde-4248-8da3-08b707f597a4.png",
-        "img_description": "Sari looks guilty as she clutches the money tightly.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/2826a304-43cd-4f8d-b240-2f4175639a07.wav",
-        "content": "Sari memilih untuk diam dan mengambil uang lebihnya. Sepanjang jalan, Sari merasa tidak nyaman dan bersalah.",
-        "next_scene": 6,
-        "branch": null,
-        "lesson_learned": null,
-        "selected_choice": null
-      },
-      {
-        "scene_id": 6,
-        "type": "decision_point",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/34184374-6a5a-4373-b827-bc5a73e1f6bb.png",
-        "img_description": "Sari sees a poster about honesty at school.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/2f76a476-b8a9-4ccd-b627-9e0a5399d2d1.wav",
-        "content": "Di sekolah, Sari melihat poster tentang kejujuran. Dia merasa bersalah dan berpikir apakah dia harus mengembalikan uang tersebut atau tidak.",
-        "next_scene": null,
-        "branch": [
-          {
-            "choice": "baik",
-            "teks": "Kembalikan uang ke Pak Budi dan minta maaf.",
-            "moral_value": "Mengakui kesalahan dan memperbaikinya adalah tindakan terpuji.",
-            "point": 30,
-            "next_scene": 9
-          },
-          {
-            "choice": "buruk",
-            "teks": "Biarkan saja, mungkin Pak Budi tidak akan tahu.",
-            "moral_value": "Mengabaikan kesalahan bisa merugikan diri sendiri.",
-            "point": -20,
-            "next_scene": 10
-          }
-        ],
-        "lesson_learned": null,
-        "selected_choice": null
-      },
-      {
-        "scene_id": 7,
-        "type": "ending",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/73ad430e-d4ab-4434-935e-ffb9d6328419.png",
-        "img_description": "Sari happily counting her savings with a determined look.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/e86facea-096e-4c8e-bf34-4c8cccd16b6d.wav",
-        "content": "Sari memutuskan untuk menabung lebih banyak. Dia senang melihat tabungannya bertambah dan bermimpi untuk membeli sepeda baru di masa depan. Dia belajar bahwa kesabaran dan perencanaan membawa hasil yang baik.",
-        "next_scene": null,
-        "branch": null,
-        "lesson_learned": "Menabung dengan sabar membawa manfaat di masa depan.",
-        "selected_choice": null
-      },
-      {
-        "scene_id": 8,
-        "type": "ending",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/1b0c8038-528b-485d-8e98-f947fec34638.png",
-        "img_description": "Sari playing with a toy but looks at her empty savings jar with a sigh.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/4cb36741-5004-406c-9d2e-cca12fd8dd20.wav",
-        "content": "Sari menggunakan semua tabungannya untuk mainan. Meskipun dia senang bermain, dia merasa menyesal karena tabungannya habis.",
-        "next_scene": null,
-        "branch": null,
-        "lesson_learned": "Menghabiskan tabungan untuk kesenangan sesaat bisa membuat kita menyesal.",
-        "selected_choice": null
-      },
-      {
-        "scene_id": 9,
-        "type": "ending",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/77539f0b-7577-48f5-812d-c867412b44fe.png",
-        "img_description": "Sari apologizing to Pak Budi who smiles forgivingly.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/febc1d91-b79f-4006-b517-6d2aba7bd64e.wav",
-        "content": "Sari berani mengakui kesalahannya dan mengembalikan uang ke Pak Budi. Pak Budi memaafkan dan mengapresiasi kejujurannya. Sari belajar bahwa memperbaiki kesalahan adalah hal yang baik.",
-        "next_scene": null,
-        "branch": null,
-        "lesson_learned": "Mengakui kesalahan dan memperbaikinya adalah tindakan yang terpuji.",
-        "selected_choice": null
-      },
-      {
-        "scene_id": 10,
-        "type": "ending",
-        "img_url": "https://bihackathon.blob.core.windows.net/storage/images/59a95827-d577-4f91-a158-a8006ea5e707.png",
-        "img_description": "Sari looks worried and guilty while playing with the toy.",
-        "voice_url": "https://bihackathon.blob.core.windows.net/storage/voices/209a90e8-ebfa-4655-9198-c46943e778f1.wav",
-        "content": "Sari memutuskan untuk tidak mengembalikan uang dan terus merasa bersalah. Dia belajar bahwa menyimpan kesalahan hanya membuatnya merasa tidak baik.",
-        "next_scene": null,
-        "branch": null,
-        "lesson_learned": "Mengabaikan kesalahan dapat membuat kita merasa bersalah dan tidak tenang.",
-        "selected_choice": null
-      }
+        {
+            "scene_id": 1,
+            "type": "narrative",
+            "img_url": null,
+            "img_description": "Tina finding a shiny coin at the bustling market.",
+            "voice_url": null,
+            "content": "tine berjalan di pasar, saat pagi hari",
+            "next_scene": 2,
+            "branch": null,
+            "lesson_learned": null,
+            "selected_choice": null
+        },
+        {
+            "scene_id": 2,
+            "type": "decision_point",
+            "img_url": null,
+            "img_description": "Pak Budi giving change to his customers in the warung.",
+            "voice_url": null,
+            "content": "Di warung, Pak Budi sedang sibuk melayani banyak pembeli. Saat memberikan kembalian, Pak Budi terburu-buru dan salah menghitung. Dia memberikan kembalian Rp 10.000 padahal seharusnya hanya Rp 5.000. Tina menyadari kesalahan ini. Apa yang sebaiknya Tina lakukan?",
+            "next_scene": null,
+            "branch": [
+                {
+                    "choice": "baik",
+                    "teks": "Tina memberitahu Pak Budi tentang kesalahan kembalian.",
+                    "moral_value": "Kejujuran adalah hal yang penting.",
+                    "point": 3,
+                    "next_scene": 3
+                },
+                {
+                    "choice": "buruk",
+                    "teks": "Tina diam saja dan menyimpan uang lebih itu.",
+                    "moral_value": "Mengambil yang bukan hak kita tidak baik.",
+                    "point": -2,
+                    "next_scene": 5
+                }
+            ],
+            "lesson_learned": null,
+            "selected_choice": null
+        },
+        {
+            "scene_id": 3,
+            "type": "narrative",
+            "img_url": null,
+            "img_description": "Pak Budi smiles and thanks Tina.",
+            "voice_url": null,
+            "content": "Pak Budi tersenyum dan berterima kasih kepada Tina karena telah jujur. Sebagai tanda terima kasih, Pak Budi memberikan Tina sebuah permen.",
+            "next_scene": 4,
+            "branch": null,
+            "lesson_learned": null,
+            "selected_choice": null
+        },
+        {
+            "scene_id": 4,
+            "type": "decision_point",
+            "img_url": null,
+            "img_description": "Tina thinking about what to do with her savings.",
+            "voice_url": null,
+            "content": "Tina sekarang berpikir untuk menyimpan koin ajaibnya. Dia bisa menabung di celengan atau membelanjakannya di pasar. Apa yang sebaiknya Tina lakukan?",
+            "next_scene": null,
+            "branch": [
+                {
+                    "choice": "baik",
+                    "teks": "Tina menabung koin ajaibnya di dalam celengan.",
+                    "moral_value": "Menabung untuk masa depan adalah pilihan yang bijak.",
+                    "point": 2,
+                    "next_scene": 7
+                },
+                {
+                    "choice": "buruk",
+                    "teks": "Tina membelanjakan koinnya untuk membeli jajan.",
+                    "moral_value": "Menghabiskan uang tanpa berpikir panjang bisa merugikan.",
+                    "point": -1,
+                    "next_scene": 8
+                }
+            ],
+            "lesson_learned": null,
+            "selected_choice": null
+        },
+        {
+            "scene_id": 5,
+            "type": "narrative",
+            "img_url": null,
+            "img_description": "Tina feeling guilty with extra money in her hand.",
+            "voice_url": null,
+            "content": "Tina merasa bersalah sepanjang hari. Ketika malam tiba, dia tidak bisa tidur nyenyak memikirkan uang yang bukan haknya.",
+            "next_scene": 6,
+            "branch": null,
+            "lesson_learned": null,
+            "selected_choice": null
+        },
+        {
+            "scene_id": 6,
+            "type": "decision_point",
+            "img_url": null,
+            "img_description": "Tina deciding what to do with the extra money.",
+            "voice_url": null,
+            "content": "Keesokan harinya, Tina merasa harus mengambil keputusan. Dia bisa mengembalikan uang itu ke Pak Budi atau menyimpannya. Apa yang sebaiknya Tina lakukan?",
+            "next_scene": null,
+            "branch": [
+                {
+                    "choice": "baik",
+                    "teks": "Tina mengembalikan uang ke Pak Budi.",
+                    "moral_value": "Lebih baik terlambat daripada tidak sama sekali untuk berbuat baik.",
+                    "point": 1,
+                    "next_scene": 9
+                },
+                {
+                    "choice": "buruk",
+                    "teks": "Tina tetap menyimpan uang itu.",
+                    "moral_value": "Mempertahankan kesalahan bisa membuat kita merasa bersalah.",
+                    "point": -3,
+                    "next_scene": 10
+                }
+            ],
+            "lesson_learned": null,
+            "selected_choice": null
+        },
+        {
+            "scene_id": 7,
+            "type": "ending",
+            "img_url": null,
+            "img_description": "Tina happily putting coins into a piggy bank.",
+            "voice_url": null,
+            "content": "Tina merasa bangga karena berhasil menabung koin ajaibnya. Dia belajar bahwa menabung bisa membantu mencapai tujuan di masa depan.",
+            "next_scene": null,
+            "branch": null,
+            "lesson_learned": "Menabung adalah kebiasaan baik yang akan membantumu di masa depan.",
+            "selected_choice": null
+        },
+        {
+            "scene_id": 8,
+            "type": "ending",
+            "img_url": null,
+            "img_description": "Tina enjoying snacks but feeling unsure about her decision.",
+            "voice_url": null,
+            "content": "Tina merasa senang saat jajan, tapi kemudian menyesal karena uangnya cepat habis. Dia belajar untuk lebih bijak dalam menggunakan uang.",
+            "next_scene": null,
+            "branch": null,
+            "lesson_learned": "Bijaklah dalam menggunakan uang agar tidak menyesal di kemudian hari.",
+            "selected_choice": null
+        },
+        {
+            "scene_id": 9,
+            "type": "ending",
+            "img_url": null,
+            "img_description": "Tina returning money to Pak Budi with a relieved smile.",
+            "voice_url": null,
+            "content": "Tina merasa lega setelah mengembalikan uang kepada Pak Budi. Dia belajar bahwa kejujuran selalu membawa ketenangan hati.",
+            "next_scene": null,
+            "branch": null,
+            "lesson_learned": "Kejujuran adalah kebajikan yang selalu akan membuat kita merasa baik.",
+            "selected_choice": null
+        },
+        {
+            "scene_id": 10,
+            "type": "ending",
+            "img_url": null,
+            "img_description": "Tina looking worried as she holds the extra money.",
+            "voice_url": null,
+            "content": "Tina merasa tidak nyaman setiap kali melihat uang itu. Dia belajar bahwa mengambil yang bukan miliknya tidak membawa kebahagiaan.",
+            "next_scene": null,
+            "branch": null,
+            "lesson_learned": "Mengambil yang bukan hak kita hanya akan membawa rasa bersalah dan ketidakbahagiaan.",
+            "selected_choice": null
+        }
     ],
     "user_story": {
-      "visited_scene": [],
-      "choices": [],
-      "total_point": 0,
-      "finished_time": 0
-    }
-  }
+        "visited_scene": [],
+        "choices": [],
+        "total_point": 0,
+        "finished_time": 0
+    },
+    "cover_img_url": null,
+    "cover_img_description": "A young Indonesian girl with a piggy bank in a colorful village setting.",
+    "description": "Tina finds a magical coin that helps her learn the importance of saving and honesty in a bustling Indonesian village.",
+    "estimated_reading_time": 300
 }
