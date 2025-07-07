@@ -79,7 +79,7 @@ class FinancialLiteracyRAG:
 
         # Set up retriever
         self.retriever = self.vector_store.as_retriever(
-            search_type="similarity", search_kwargs={"k": top_k}
+            search_type="similarity", search_kwargs={"k": top_k, "score_threshold": 0.35}
         )
 
     @staticmethod
