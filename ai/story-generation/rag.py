@@ -79,7 +79,7 @@ class FinancialLiteracyRAG:
 
         # Set up retriever
         self.retriever = self.vector_store.as_retriever(
-            search_type="similarity", search_kwargs={"k": top_k, "score_threshold": 0.35}
+            search_type="similarity_score_threshold", search_kwargs={"k": top_k, "score_threshold": 0.15}
         )
 
     @staticmethod
@@ -128,7 +128,7 @@ class FinancialLiteracyRAG:
                         "img_url": None,
                         "img_description": "<buat deskripsi gambar yang sesuai dengan scene dalam bahasa Inggris>",
                         "voice_url": None,
-                        "content": "Di warung, Pak Budi sedang sibuk melayani banyak pembeli. Saat memberikan kembalian, Pak Budi terburu-buru dan salah menghitung. Dia memberikan kembalian Rp 10.000 padahal seharusnya hanya Rp 5.000. Sari menyadari kesalahan ini. Apa yang sebaiknya Sari lakukan?",
+                        "content": "<isi konten cerita yang sesuai dengan scene dalam bahasa Indonesia>",
                         "branch": [
                             {
                                 "choice": "baik",
