@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kanca/app/app.dart';
-import 'package:kanca/counter/counter.dart';
+import 'package:kanca/features/onboarding/onboarding.dart';
 
 void main() {
   group('App', () {
-    testWidgets('renders CounterPage', (tester) async {
+    testWidgets('renders OnboardingPage', (tester) async {
       await tester.pumpWidget(const App());
-      expect(find.byType(CounterPage), findsOneWidget);
+      expect(find.byType(OnboardingPage), findsOneWidget);
     });
   });
 }
