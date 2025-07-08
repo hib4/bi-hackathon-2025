@@ -169,53 +169,66 @@ class ChildMonitoringRAG:
             },
             indent=2,
         )
-
-    def make_backend_api_call(self, api_details: dict) -> str:
+        
+    def make_backend_api_call(self, api_details: dict) -> dict[str, str]:
         """
-        Makes an API call to the backend based on the classified intent's details.
-        Returns the JSON response from the backend as a string.
+        Makes API calls to the backend based on the classified intent's details.
+        Handles multiple API types if present in api_details['api_type'].
+        Returns a dictionary mapping API type to its JSON response string.
         """
-        api_type = api_details.get("api_type")
         child_id = api_details.get("child_id")
-        
+        api_types = api_details.get("api_type") # This is now a list
+
         if not child_id:
-            return json.dumps({"error": "Child ID missing for API call."})
+            return {"error": json.dumps({"error": "Child ID missing for API call."})}
 
-        url = f"{self.backend_api_base_url}/child/{child_id}"
-        params = {}
-        
-        if "concept-performance" in api_type:
-            url += "/concept-performance"
-            themes = api_details.get("themes")
-            if themes:
-                params["themes"] = ",".join(themes)
-        elif "performance-timeline" in api_type:
-            url += "/performance-timeline"
-            if api_details.get("time_unit"):
-                params["time_unit"] = api_details["time_unit"]
-            if api_details.get("num_periods") is not None:
-                params["num_periods"] = api_details["num_periods"]
-            if api_details.get("start_date"):
-                params["start_date"] = api_details["start_date"]
-            if api_details.get("end_date"):
-                params["end_date"] = api_details["end_date"]
-            
-        elif "overall-statistics" in api_type:
-            url += "/overall-statistics"
-        else:
-            # This case covers api_type being null or unrecognized, for general_query intent
-            print(f"No specific child performance API type identified: {api_type}. Not making a backend call for performance data.")
-            return json.dumps({"status": "no_specific_api_call_needed_for_intent"})
+        if not isinstance(api_types, list): # Ensure it's a list for iteration
+            api_types = [api_types] if api_types is not None else []
 
-        print(f"Attempting API call to: {url} with params: {params}")
-        try:
-            response = requests.get(url, params=params)
-            response.raise_for_status()
-            print(f"API call successful. Status: {response.status_code}")
-            return json.dumps(response.json(), indent=2)
-        except requests.exceptions.RequestException as e:
-            print(f"API call failed for {url} with params {params}: {e}")
-            return json.dumps({"error": f"Gagal mengambil data performa anak dari backend: {e}"})
+        results = {}
+        for api_type in api_types:
+            url = f"{self.backend_api_base_url}/child/{child_id}"
+            params = {}
+            current_api_data_key = api_type # Key to store result in dictionary
+
+            if api_type == "concept-performance":
+                url += "/concept-performance"
+                themes = api_details.get("themes")
+                if themes:
+                    params["themes"] = ",".join(themes)
+            elif api_type == "performance-timeline":
+                url += "/performance-timeline"
+                if api_details.get("time_unit"):
+                    params["time_unit"] = api_details["time_unit"]
+                if api_details.get("num_periods") is not None:
+                    params["num_periods"] = api_details["num_periods"]
+                if api_details.get("start_date"):
+                    params["start_date"] = api_details["start_date"]
+                if api_details.get("end_date"):
+                    params["end_date"] = api_details["end_date"]
+            elif api_type == "overall-statistics":
+                url += "/overall-statistics"
+            else:
+                print(f"Skipping unknown API type: {api_type}. Child ID: {child_id}")
+                results[f"{api_type}_error"] = json.dumps({"error": f"Unknown API type requested: {api_type}"})
+                continue # Skip to next api_type in the list
+
+            print(f"Attempting API call to: {url} with params: {params} for type: {api_type}")
+            try:
+                response = requests.get(url, params=params)
+                response.raise_for_status()
+                print(f"API call successful for {api_type}. Status: {response.status_code}")
+                results[api_type] = json.dumps(response.json(), indent=2)
+            except requests.exceptions.RequestException as e:
+                print(f"API call failed for {api_type} at {url} with params {params}: {e}")
+                results[f"{api_type}_error"] = json.dumps({"error": f"Gagal mengambil data untuk {api_type}: {e}"})
+
+        # If no specific API types were identified or called, and it's not general_query,
+        # return a default status if needed.
+        if not results and (api_details.get("intent") == "child_performance_data" and not api_types):
+            return {"status": json.dumps({"status": "no_specific_api_call_needed_for_child_performance_intent"})}
+
+        return results
 
 
     def create_prompt(
@@ -291,31 +304,45 @@ class ChildMonitoringRAG:
 
         return formatted_prompt
 
+    # Modify get_chat_response to handle combined data
     def get_chat_response(self, query: str, child_id: str, child_age: int) -> str:
         """
         Main function to get a chat response from the RAG system.
         Orchestrates intent classification, data fetching, and response generation.
         """
-        # 1. Classify intent using the dedicated IntentClassifier
         intent_data = self.intent_classifier.classify(query, child_id)
         intent = intent_data.get("intent")
         api_details = intent_data.get("api_call_details", {})
 
-        children_data_context = "{}" # Default empty context
+        children_data_context = "" # Initialize as empty string
 
-        # 2. Fetch child-specific data if needed
         if intent == "child_performance_data":
-            print(f"Intent classified as child_performance_data. Attempting to fetch data for {api_details.get('api_type')}...")
-            children_data_context = self.make_backend_api_call(api_details)
-        else:
-            print("Intent classified as general_query. No child-specific data needed from backend.")
-            children_data_context = json.dumps({"status": "no_child_data_requested", "query_type": "general"})
+            # make_backend_api_call now returns a dict of results
+            backend_results = self.make_backend_api_call(api_details)
+            print(f"Backend results: {backend_results}")
 
-        print(f"Children data context for LLM: {children_data_context}")
-        # 3. Create the main prompt (which includes RAG context retrieval)
+            if backend_results and not backend_results.get("error"): # Check if actual data was returned
+                # Combine all fetched data into a single JSON string for the LLM
+                combined_data = {}
+                for api_type, data_str in backend_results.items():
+                    try:
+                        combined_data[api_type] = json.loads(data_str)
+                    except json.JSONDecodeError:
+                        combined_data[api_type] = data_str # Keep as string if not valid JSON
+
+                children_data_context = json.dumps(combined_data, indent=2)
+                print(f"Combined children data context for LLM:\n{children_data_context}")
+            else:
+                children_data_context = json.dumps({"status": "failed_to_fetch_child_data", "details": backend_results})
+                print(f"Failed to fetch child data: {children_data_context}")
+        else:
+            children_data_context = json.dumps({"status": "no_child_data_requested", "query_type": "general"})
+            print("Intent classified as general_query. No child-specific data needed from backend.")
+
+        # Create the main prompt
         final_prompt = self.create_prompt(query, children_data_context, child_age)
 
-        # 4. Invoke the main LLM
+        # Invoke the main LLM
         try:
             response = self.main_llm.invoke(final_prompt)
             return response.content.strip()
