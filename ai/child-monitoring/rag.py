@@ -6,6 +6,8 @@ from langchain.prompts import ChatPromptTemplate
 import os
 import shutil
 import json
+from dotenv import load_dotenv
+load_dotenv() 
 
 
 class ChildMonitoringRAG:
@@ -14,13 +16,20 @@ class ChildMonitoringRAG:
         data_dir: str,
         persist_directory: str,
         model: str = "text-embedding-3-small",
+        similarity_threshold: float = 0.25,
+        top_k: int = 3,
     ):
         self.data_dir = data_dir
         self.persist_directory = persist_directory
         self.model = model
+        self.similarity_threshold = similarity_threshold
+        self.top_k = top_k
 
         # Initialize RAG components
-        self.embeddings = OpenAIEmbeddings(model=model)
+        self.embeddings = OpenAIEmbeddings(
+            model=model,
+            openai_api_key=os.getenv("OPENAI_API_KEY"),
+        )
         self.vectorstore = None
         self.retriever = None
 
@@ -37,16 +46,15 @@ class ChildMonitoringRAG:
         print(f"Loaded {len(pages)} documents from {self.data_dir}")
         return pages
 
-    def setup_vector_store(self, documents, top_k: int = 4, chunk_size: int = 800):
+    def setup_vector_store(self, documents, chunk_size: int = 1000):
         """
         Create vector store and set up retriever
         """
-
         # Split documents into chunks
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
             chunk_overlap=100,
-            separators=["\n\n", "\n", "### ", "## ", "- ", ".", "!", "?", ",", " "],
+            separators=["\n\n", "\n", ".", "!", "?", ",", " "],
             length_function=len,
         )
 
@@ -60,25 +68,42 @@ class ChildMonitoringRAG:
         )
 
         # Set up retriever
-        self.retriever = self.vector_store.as_retriever(
-            search_type="similarity", search_kwargs={"k": top_k, "score_threshold": 0.4}
-        )
-
-    def initialize_rag(self):
-        "Initialize RAG system"
+        
+    def initialize_rag(self, rebuild: bool = False):
+        """
+        Initialize the complete RAG system
+        """
         print("Initializing RAG system...")
 
-        if os.path.exists(self.persist_directory):
-            shutil.rmtree(self.persist_directory)
+        # Check if the persist directory
+        if os.path.exists(self.persist_directory) and not rebuild:
+            print("Using existing vector store from:", self.persist_directory)
+            self.vector_store = Chroma(
+                persist_directory=self.persist_directory,
+                embedding_function=self.embeddings,
+            )
+            self.retriever = self.retriever = self.vector_store.as_retriever(
+                search_type="similarity_score_threshold",
+                search_kwargs={"k": 3, "score_threshold": self.similarity_threshold},
+            )
+        else:
+            # Setup fresh vector store
+            print("Creating new vector store...")
+            # Delete existing directory if rebuilding
+            if os.path.exists(self.persist_directory):
+                shutil.rmtree(self.persist_directory)
+            documents = self.load_documents()
+            self.setup_vector_store(documents)
+            print(f"Vector store initialized with {len(documents)} documents.")
+        
+        self.retriever = self.vector_store.as_retriever(
+            search_type="similarity_score_threshold",
+            search_kwargs={"k": self.top_k, "score_threshold": self.similarity_threshold},
+        )
+        print(f"Retriever initialized with self.top_k={self.top_k} and similarity threshold={self.similarity_threshold}.")
+        
+        print("RAG system initialized successfully.")
 
-        print("Loading documents...")
-        documents = self.load_documents()
-
-        print("Setting vector database...")
-        self.setup_vector_store(documents)
-
-        print("RAG system initialized successfully!")
-        return True
 
     @staticmethod
     def build_output_format_template() -> str:
@@ -86,7 +111,6 @@ class ChildMonitoringRAG:
         Build the output format template (JSON schema) for the LLM response.
         Returns a string representing the desired JSON schema.
         """
-        # FIXED: Corrected JSON structure and added clearer type/description for LLM
         return json.dumps(
             {
                 "analysis": "string (Ringkasan analisis pola belajar dan pemahaman anak berdasarkan data yang diberikan. Jelaskan kekuatan dan area yang butuh perhatian. Sampaikan dalam bentuk narasi yang interaktif dan mudah dipahami oleh orang tua atau guru, seolah-olah Anda sedang berkomunikasi langsung dengan mereka.)",
@@ -94,6 +118,7 @@ class ChildMonitoringRAG:
                     "mastered": "array of string (Daftar konsep literasi finansial yang telah dikuasai anak, contoh: 'Menabung')",
                     "learning": "array of string (Daftar konsep yang sedang dalam proses dipelajari, contoh: 'Berbelanja')",
                     "struggling": "array of string (Daftar konsep yang masih menjadi tantangan bagi anak, contoh: 'Berbagi')",
+                    "<bagian ini dapat dikosongkan apabila tidak relevan dengan query>": "array of string (Bagian ini dapat dikosongkan jika tidak ada konsep yang relevan.)",
                 },
                 "suggestions": [
                     {
@@ -104,12 +129,12 @@ class ChildMonitoringRAG:
                 ],
                 "general_notes": "string (Informasi tambahan singkat, disclaimer, atau catatan umum jika ada.)",
             },
-            indent=2,  # Use indent for readability in the prompt
+            indent=2,
         )
 
     def create_prompt(
         self, query: str, children_data_context: str
-    ) -> ChatPromptTemplate:  # FIXED: Added children_data_context
+    ) -> ChatPromptTemplate:
         """
         Creates a formatted prompt for the LLM, combining children's data context and RAG context.
 
@@ -147,7 +172,7 @@ class ChildMonitoringRAG:
         output_format = self.build_output_format_template()
 
         # --- PROMPT TEMPLATE ---
-        PROMPT_TEMPLATE = f"""
+        PROMPT_TEMPLATE = """
         Anda adalah seorang asisten AI ahli dalam pedagogi dan literasi finansial di Indonesia.
         Tugas utama Anda adalah membantu orang tua dan pendidik menganalisis pola belajar dan pemahaman literasi finansial anak, serta memberikan saran yang tepat.
 
@@ -180,9 +205,10 @@ class ChildMonitoringRAG:
         Instruksi Umum:
         1.  Analisis data anak dengan cermat. Identifikasi kekuatan dan area yang perlu peningkatan.
         2.  Berikan jawaban yang jelas, empatik, dan mudah dimengerti oleh orang tua. Hindari jargon yang rumit.
-        3.  Jika relevan, sertakan saran konkret dan aktivitas yang bisa dilakukan orang tua untuk membantu anak.
-        4.  Selalu berikan saran yang sesuai dengan usia anak dan konteks budaya Indonesia.
-        5.  Jika data yang diminta tidak tersedia atau relevan, jelaskan dengan sopan.
+        3.  Sesuaikan respons dengan usia dari anak yaitu {age} tahun, dan pastikan saran yang diberikan sesuai dengan tahap perkembangan mereka.
+        4.  Jika relevan, sertakan saran konkret dan aktivitas yang bisa dilakukan orang tua untuk membantu anak.
+        5.  Selalu berikan saran yang sesuai dengan konteks budaya Indonesia.
+        5.  Jika data yang diminta tidak tersedia atau relevan, jelaskan dengan sopan, lalu follow-up dengan pertanyaan klarifikasi.
         6.  Jika pertanyaan umum tidak berkaitan dengan data anak, fokus pada konteks RAG.
         7.  Prioritaskan informasi dari data anak dan konteks RAG dibandingkan pengetahuan umum Anda.
         """
@@ -194,6 +220,7 @@ class ChildMonitoringRAG:
             rag_context_text=rag_context_text,
             query=query,
             output_format=output_format,
+            age="11",  # Example age, can be parameterized if needed
         )
 
         return formatted_prompt
