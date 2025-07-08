@@ -37,13 +37,34 @@ class IntentClassifier:
             "Kerja Keras", "Tanggung Jawab", "Perencanaan Keuangan", "Nilai Uang", "Konsep Dasar Uang",
             "Donasi", "Berbelanja dengan Bijak", "Kewirausahaan", "Gotong Royong", "Amanah", "Investasi"
         ]
+        
+        Ada 2 niat utama yang perlu Anda identifikasi:
+        1. **general_query**: Pertanyaan umum yang tidak spesifik tentang performa anak, seperti tips atau informasi umum.
+        2. **child_performance_data**: Pertanyaan spesifik tentang performa anak dalam literasi finansial, yang bisa mencakup:
+        - Pertanyaan tentang tema tertentu (misalnya, "Bagaimana performa anak saya di konsep menabung?")
+        - Pertanyaan tentang perkembangan anak dalam periode waktu tertentu (misalnya, "Tolong tunjukkan perkembangan anak saya bulan lalu.")
+        - Pertanyaan tentang ringkasan umum atau statistik performa anak (misalnya, "Berikan ringkasan umum tentang progres belajar anak saya.")
+        Untuk niat **child_performance_data**, Anda perlu mengekstrak parameter berikut:
+        - **api_type**: Jenis API yang relevan untuk pertanyaan ini (bisa 'concept-performance', 'performance-timeline', 'overall-statistics', atau null jika tidak relevan).
+        - **themes**: Daftar tema yang diminta (pilih dari daftar tema di atas, atau kosong jika tidak spesifik).
+        - **time_unit**: Satuan waktu yang diminta (bisa 'week', 'month', 'day', atau null jika tidak relevan).
+        - **num_periods**: Jumlah periode yang diminta (integer, atau null jika tidak relevan).
+        - **start_date**: Tanggal mulai periode yang diminta (format YYYY-MM-DD, atau null jika tidak relevan).
+        - **end_date**: Tanggal akhir periode yang diminta (format YYYY-MM-DD, atau null jika tidak relevan).
+        - **child_id**: ID anak yang selalu harus diisi dari input pengguna.    
+        
+        Ada beberapa API yang bisa dipanggil berdasarkan niat pengguna (dapat lebih dari satu):
+        1. **concept-performance**: Untuk pertanyaan spesifik tentang performa anak di tema tertentu.
+        2. **performance-timeline**: Untuk pertanyaan tentang perkembangan anak dalam periode waktu tertentu (mingguan, bulanan, harian).
+        3. **overall-statistics**: Untuk pertanyaan umum tentang statistik performa anak secara keseluruhan atau ringkasan umum.
+        Apabila niatnya adalah **general_query**, Anda tidak perlu mengisi parameter API, cukup kembalikan nilai null atau array kosong untuk semua parameter API.
 
         Kembalikan respons dalam format JSON murni, tanpa teks atau markdown tambahan, dengan struktur berikut:
         ```json
         {{
           "intent": "string (bisa 'general_query' atau 'child_performance_data')",
           "api_call_details": {{
-            "api_type": "string (bisa 'concept-performance', 'performance-timeline', 'overall-statistics', atau null jika general_query)",
+            "api_type": "array_of_string (bisa 'concept-performance', 'performance-timeline', 'overall-statistics', atau null jika general_query tanpa alasan spesifik)",
             "themes": "array of string (tema yang diminta, pilih dari daftar tema yang mungkin di atas, atau kosong jika tidak spesifik)",
             "time_unit": "string (bisa 'week', 'month', 'day', atau null)",
             "num_periods": "integer (jumlah periode yang diminta, atau null)",
@@ -110,13 +131,13 @@ if __name__ == '__main__':
     classifier = IntentClassifier()
 
     print("--- Test 1: Child Performance Query (specific themes) ---")
-    query_1 = "Bagaimana performa Adi di konsep menabung dan kejujuran?"
+    query_1 = "Bagaimana performa Adi di konsep membedakan kebutuhan dan keinginannya? Selain itu bagaimana progresnya selama 1 bulan terakhir?"
     child_id_1 = "adi_123"
     result_1 = classifier.classify(query_1, child_id_1)
     print(f"Result 1: {json.dumps(result_1, indent=2)}")
 
     print("\n--- Test 2: Child Performance Query (timeline) ---")
-    query_2 = "Tolong tunjukkan perkembangan anak saya bulan lalu."
+    query_2 = "Tolong tunjukkan perkembangan anak saya dalam 2 minggu terakhir yang lalu."
     child_id_2 = "budi_456"
     result_2 = classifier.classify(query_2, child_id_2)
     print(f"Result 2: {json.dumps(result_2, indent=2)}")
@@ -128,7 +149,7 @@ if __name__ == '__main__':
     print(f"Result 3: {json.dumps(result_3, indent=2)}")
 
     print("\n--- Test 4: Child Overall Statistics Query ---")
-    query_4 = "Berikan ringkasan umum tentang progres belajar anak saya."
+    query_4 = "Berikan ringkasan umum / overall statistics tentang progres belajar literasi finansial anak saya."
     child_id_4 = "dodi_101"
     result_4 = classifier.classify(query_4, child_id_4)
     print(f"Result 4: {json.dumps(result_4, indent=2)}")

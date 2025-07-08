@@ -184,12 +184,12 @@ class ChildMonitoringRAG:
         url = f"{self.backend_api_base_url}/child/{child_id}"
         params = {}
         
-        if api_type == "concept-performance":
+        if "concept-performance" in api_type:
             url += "/concept-performance"
             themes = api_details.get("themes")
             if themes:
                 params["themes"] = ",".join(themes)
-        elif api_type == "performance-timeline":
+        elif "performance-timeline" in api_type:
             url += "/performance-timeline"
             if api_details.get("time_unit"):
                 params["time_unit"] = api_details["time_unit"]
@@ -200,7 +200,7 @@ class ChildMonitoringRAG:
             if api_details.get("end_date"):
                 params["end_date"] = api_details["end_date"]
             
-        elif api_type == "overall-statistics":
+        elif "overall-statistics" in api_type:
             url += "/overall-statistics"
         else:
             # This case covers api_type being null or unrecognized, for general_query intent
