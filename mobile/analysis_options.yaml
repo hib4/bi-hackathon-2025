@@ -9,3 +9,4 @@ linter:
 analyzer:
   errors:
     invalid_annotation_target: ignore
+    inference_failure_on_function_invocation: ignore

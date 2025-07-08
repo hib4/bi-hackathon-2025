@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kanca/counter/counter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:kanca/features/onboarding/onboarding.dart';
 import 'package:kanca/l10n/l10n.dart';
 
 class App extends StatelessWidget {
@@ -9,6 +10,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        textTheme: GoogleFonts.lexendTextTheme(),
         appBarTheme: AppBarTheme(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
@@ -16,7 +18,8 @@ class App extends StatelessWidget {
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      debugShowCheckedModeBanner: false,
+      home: const OnboardingPage(),
     );
   }
 }
