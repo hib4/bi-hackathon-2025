@@ -10,17 +10,18 @@ import json
 
 class FinancialLiteracyRAG:
     def __init__(
-        self, data_dir: str, persist_directory: str, model: str = "gpt-4o-mini"
+        self, data_dir: str, persist_directory: str, model: str = "text-embedding-3-small"
     ):
         self.data_dir = data_dir
         self.persist_directory = persist_directory
         self.model = model
 
         # Initialize components
-        self.embeddings = OpenAIEmbeddings()
+        self.embeddings = OpenAIEmbeddings(
+            model = model
+        )
         self.vectorstore = None
         self.retriever = None
-        self.qa_chain = None
 
     def add_metadata(self, documents):
         for doc in documents:
