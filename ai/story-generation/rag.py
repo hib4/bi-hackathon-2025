@@ -6,11 +6,16 @@ from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 from langchain.prompts import ChatPromptTemplate
 import json
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file
 
 
 class FinancialLiteracyRAG:
     def __init__(
-        self, data_dir: str, persist_directory: str, model: str = "text-embedding-3-small"
+        self,
+        data_dir: str,
+        persist_directory: str,
+        model: str = "text-embedding-3-small",
     ):
         self.data_dir = data_dir
         self.persist_directory = persist_directory
@@ -18,7 +23,8 @@ class FinancialLiteracyRAG:
 
         # Initialize components
         self.embeddings = OpenAIEmbeddings(
-            model = model
+            model=model,
+            openai_api_key=os.getenv("OPENAI_API_KEY", "your_openai_api_key_here"),
         )
         self.vectorstore = None
         self.retriever = None
@@ -41,11 +47,6 @@ class FinancialLiteracyRAG:
                 doc.metadata["age_range"] = "11-12"
                 doc.metadata["min_age"] = 11
                 doc.metadata["max_age"] = 12
-            else:
-                # For content without specific age (cultural, stories)
-                doc.metadata["age_range"] = "universal"
-                doc.metadata["min_age"] = 4
-                doc.metadata["max_age"] = 12
 
             # Content type detection
             if "cultural_elements" in file_path:
@@ -55,7 +56,7 @@ class FinancialLiteracyRAG:
             elif "stories" in file_path:
                 doc.metadata["content_type"] = "story"
 
-    def setup_vector_store(self, documents, top_k: int = 10, chunk_size: int = 1000):
+    def setup_vector_store(self, documents, top_k: int = 10, chunk_size: int = 600):
         """
         Create vector store and set up retriever
         """
@@ -79,7 +80,8 @@ class FinancialLiteracyRAG:
 
         # Set up retriever
         self.retriever = self.vector_store.as_retriever(
-            search_type="similarity", search_kwargs={"k": top_k}
+            search_type="similarity_score_threshold",
+            search_kwargs={"k": top_k, "score_threshold": 0.1},
         )
 
     @staticmethod
@@ -93,7 +95,14 @@ class FinancialLiteracyRAG:
             {
                 "user_id": user_id,
                 "title": "<judul cerita akan diisi oleh LLM>",
-                "tema": [],
+                "tema": [
+                    """
+                    Menabung, Berbagi, Kebutuhan vs Keinginan, Instrumen Keuangan, Kejujuran, 
+                    Kerja Keras, Tanggung Jawab, Perencanaan Keuangan, Nilai Uang, Konsep Dasar Uang,
+                    Donasi, Berbelanja dengan Bijak, Kewirausahaan, Gotong Royong, Amanah, Investasi,
+                    """
+                    "<pilih 1 - 3 tema yang sesuai dari pilihan tersebut, pastikan sama dan konsisten dengan pilihan tersebut"
+                ],
                 "language": "indonesian",
                 "status": "in_progress",
                 "age_group": age_group,
@@ -128,7 +137,7 @@ class FinancialLiteracyRAG:
                         "img_url": None,
                         "img_description": "<buat deskripsi gambar yang sesuai dengan scene dalam bahasa Inggris>",
                         "voice_url": None,
-                        "content": "Di warung, Pak Budi sedang sibuk melayani banyak pembeli. Saat memberikan kembalian, Pak Budi terburu-buru dan salah menghitung. Dia memberikan kembalian Rp 10.000 padahal seharusnya hanya Rp 5.000. Sari menyadari kesalahan ini. Apa yang sebaiknya Sari lakukan?",
+                        "content": "<isi konten cerita yang sesuai dengan scene dalam bahasa Indonesia>",
                         "branch": [
                             {
                                 "choice": "baik",
@@ -183,26 +192,31 @@ class FinancialLiteracyRAG:
         print(f"Loaded {len(documents)} documents from {self.data_dir}")
         return documents
 
-    def initialize_rag(self):
+    def initialize_rag(self, rebuild: bool = False):
         """
         Initialize the complete RAG system
         """
         print("Initializing RAG system...")
 
+        # Check if the persist directory
         if os.path.exists(self.persist_directory):
-            shutil.rmtree(self.persist_directory)
+            self.vector_store = Chroma(
+                persist_directory=self.persist_directory,
+                embedding_function=self.embeddings,
+            )
+            self.retriever = self.retriever = self.vector_store.as_retriever(
+                search_type="similarity_score_threshold",
+                search_kwargs={"k": 10, "score_threshold": 0.1},
+            )
+            print("Using existing vector store from:", self.persist_directory)
+            return True
+        else:
+            # Setup fresh vector store
+            documents = self.load_documents()
+            self.setup_vector_store(documents)
+            print("RAG system initialized successfully!")
+            return True
 
-        # Load documents
-        documents = self.load_documents()
-
-        if not documents:
-            print("No documents found! RAG system will work without context.")
-            return False
-
-        # Setup vector store and retriever
-        self.setup_vector_store(documents)
-        print("RAG system initialized successfully!")
-        return True
 
     @staticmethod
     def build_story_structure_rules(age_group: int) -> str:
@@ -229,9 +243,9 @@ class FinancialLiteracyRAG:
                 "   - Pilihan buruk → scene 10 (ending terburuk)\n"
             )
         else:
-            return "Gunakan struktur 5 scene default."
+            return "Gunakan struktur 10 scene default."
 
-    def filter_retrieved_docs(self, docs, age, k=5):
+    def filter_retrieved_docs(self, docs, age, k=6):
         """
         Filter and prioritize documents, prioritizing matching age group and financial concepts before cultural elements and stories.
         """
@@ -240,15 +254,15 @@ class FinancialLiteracyRAG:
             doc
             for doc in docs
             if doc.metadata.get("min_age", 0) <= age <= doc.metadata.get("max_age", 12)
+            and doc.metadata.get("content_type") == "financial"
         ]
 
-        # Priority 2: Financial concepts from adjacent age groups
+        # Priority 2: Financial core concepts
         financial_concepts = [
             doc
             for doc in docs
             if doc.metadata.get("content_type") == "financial"
-            and doc not in age_exact
-            and abs(doc.metadata.get("min_age", age) - age) <= 3  # Within 3 years
+            and "core_concepts" in doc.metadata.get("source")
         ]
 
         # Priority 3: Cultural elements and stories (universal content)
@@ -271,27 +285,35 @@ class FinancialLiteracyRAG:
         # Combine with limits to ensure balance
         prioritized_docs = (
             age_exact[:3]  # Max 3 from exact age
-            + financial_concepts[:2]  # Max 2 from other financial
+            + financial_concepts[:2]  # Max 2 from financial core concepts
             + cultural_story[:2]  # Max 2 cultural/story
             + other_content  # Fill remaining
         )[:k]
 
-
         print(f"Filtering for age {age}:")
         print(f"  Age-appropriate: {len(age_exact)}")
+        print(
+            f" Age-appropriate documents: {[doc.metadata.get('source', 'Unknown') for doc in age_exact]}"
+        )
+
         print(f"  Adjacent financial: {len(financial_concepts)}")
+        print(
+            f"  Financial concepts documents: {[doc.metadata.get('source', 'Unknown') for doc in financial_concepts]}"
+        )
+
+        print(f"  Cultural/Story: {len(cultural_story)}")
+        print(
+            f"  Cultural/Story documents: {[doc.metadata.get('source', 'Unknown') for doc in cultural_story]}"
+        )
+
         print(f"  Universal content: {len(other_content)}")
+        print(f"  Other documents: {[doc.metadata.get('source', 'Unknown') for doc in other_content]}")
+        
         print(f"  Final selection: {len(prioritized_docs)} documents")
+        print(f"  Selected documents: {[doc.metadata.get('source', 'Unknown') for doc in prioritized_docs]}")
         return prioritized_docs
 
     def create_prompt(self, query, user_id, age: int):  # Change parameter to int
-        output_format = self.build_output_format_template(
-            user_id=user_id, age_group=age  # Keep as int
-        )
-
-        # Use age directly for structure rules
-        structure_rules = self.build_story_structure_rules(age)
-
         PROMPT_TEMPLATE = """
         You are an expert Indonesian storyteller specializing in teaching financial literacy to children.
 
@@ -316,7 +338,8 @@ class FinancialLiteracyRAG:
         3. Choices should lead to consequences that are constructive but realistic
         4. Provide at least two different endings with different moral outcomes
         5. Do not include markdown or explanations—just clean JSON
-        6. For higher age groups (11 - 12), the decision points can be more like a quiz to test their understanding for the said concept
+        6. For higher age groups (11 - 12), the decision points can be more like a quiz to test their understanding for the said concept.
+        For example: "Apa itu pegadaian ?"
 
         ### Format:
         {output_format}
@@ -338,19 +361,26 @@ class FinancialLiteracyRAG:
                 print(f"Error retrieving documents: {e}")
                 context = ["Tidak ada konteks yang relevan ditemukan."]
         else:
-            print("Retriever not initialized. Make sure to call initialize_rag() first.")
+            print(
+                "Retriever not initialized. Make sure to call initialize_rag() first."
+            )
             context = ["Tidak ada konteks yang relevan ditemukan."]
 
         if not context:
             context = ["Tidak ada konteks yang relevan ditemukan."]
 
+        output_format = self.build_output_format_template(
+            user_id=user_id, age_group=age  # Keep as int
+        )
+        # Use age directly for structure rules
+        structure_rules = self.build_story_structure_rules(age)
         # Create and format the prompt
         prompt = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
         formatted_prompt = prompt.format_prompt(
             context=context,
             query=query,
+            age=age,
             output_format=output_format,
-            age=age,  # Changed from age_group to age
             structure_rules=structure_rules,
         )
 
