@@ -51,15 +51,15 @@ flutter_gen:
     flutter_svg: true
 
 flutter_native_splash:
-  color: "#FFFAE5"
+  color: "#FFFFF8"
   image: splash_screen.png
-  color_dark: "#FFFAE5"
+  color_dark: "#FFFFF8"
   image_dark: splash_screen.png
 
   android_12:
-    color: "#FFFAE5"
+    color: "#FFFFF8"
     image: splash_screen.png
-    color_dark: "#FFFAE5"
+    color_dark: "#FFFFF8"
     image_dark: splash_screen.png
 
   android: true
