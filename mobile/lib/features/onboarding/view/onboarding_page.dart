@@ -209,7 +209,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     child: Text(
                       _currentIndex == _onboardingSections.length - 1
                           ? 'Mulai'
-                          : 'Next',
+                          : 'Lanjut',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

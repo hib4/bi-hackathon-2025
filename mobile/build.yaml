@@ -2,6 +2,7 @@ targets:
   $default:
     sources:
       include:
+        - lib/**env.dart
         - lib/**_value.dart
         - lib/**_status.dart
         - lib/**_model.dart
