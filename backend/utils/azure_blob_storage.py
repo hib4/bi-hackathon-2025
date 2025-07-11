@@ -1,5 +1,5 @@
 import base64
-from settings import settings
+from setting.settings import settings
 from azure.storage.blob import BlobClient
 
 STORAGE_ACCOUNT_NAME = "bihackathon"

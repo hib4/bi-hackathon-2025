@@ -1,11 +1,15 @@
+from fastapi import HTTPException, Query
 from collections import defaultdict
 from models.book import Book
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
+from typing import Optional, List
 
 async def get_analytic(current_user):
     user_id = current_user.get("id")
-    print(user_id)
     books = await Book.find(Book.user_id == user_id).to_list()
+
+    if not books:
+        raise HTTPException(status_code= 404, detail= f"user doesn't have book, please create one")
 
     books_dict = [book.dict() for book in books]
 
@@ -180,3 +184,138 @@ def _aggregate_child_analytic(books: list) -> dict:
             "account_created": overall_stats["account_created"]
         }
     }
+
+def _filter_books_by_time(
+        books: list,
+        time_unit: Optional[str] = None,
+        num_periods: Optional[int] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None
+) -> list:
+    """Filter books based on time parameters"""
+    if not any([time_unit, num_periods, start_date, end_date]):
+        return books
+
+    now = datetime.now(timezone.utc)
+    filtered_books = []
+
+    for book in books:
+        created_at = book.get("created_at")
+        if not created_at:
+            continue
+            
+        # FIX: Ensure created_at is offset-aware before comparison
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=timezone.utc)
+
+        # Handle different time filter cases
+        if start_date and end_date:
+            start = datetime.strptime(start_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            end = datetime.strptime(end_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            if start <= created_at <= end:
+                filtered_books.append(book)
+
+        elif start_date and not end_date:
+            start = datetime.strptime(start_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            if start <= created_at <= now:
+                filtered_books.append(book)
+
+        elif num_periods and time_unit:
+            if time_unit == "week":
+                delta = timedelta(weeks=num_periods)
+            elif time_unit == "month":
+                delta = timedelta(days=30 * num_periods)  # Approximate
+            else:
+                delta = timedelta(days=0)
+            
+            start = now - delta
+            if created_at >= start:
+                filtered_books.append(book)
+                
+    return filtered_books
+
+# New helper for concept performance aggregation
+def _aggregate_concept_performance(books: list, themes: Optional[List[str]] = None) -> dict:
+    """Aggregate concept performance from books"""
+    concept_performance = defaultdict(lambda: {
+        "total_decisions": 0,
+        "correct_decisions": 0,
+        "first_encounter": None,
+        "last_encounter": None
+    })
+    
+    for book in books:
+        book_themes = book.get("tema", []) or book.get("theme", [])
+        user_story = book.get("user_story", {})
+        choices = user_story.get("choices", [])
+        created_at = book.get("created_at")
+        finished_at = book.get("finished_at")
+        
+        for theme in book_themes:
+            # Skip if theme filtering is applied and this theme isn't in the list
+            if themes and theme not in themes:
+                continue
+                
+            theme_data = concept_performance[theme]
+            theme_data["total_decisions"] += len(choices)
+            theme_data["correct_decisions"] += sum(1 for c in choices if c.get("choice") == "baik")
+            
+            # Update first/last encounter timestamps
+            if created_at:
+                if not theme_data["first_encounter"] or created_at < theme_data["first_encounter"]:
+                    theme_data["first_encounter"] = created_at
+            if finished_at:
+                if not theme_data["last_encounter"] or finished_at > theme_data["last_encounter"]:
+                    theme_data["last_encounter"] = finished_at
+    
+    # Calculate success rates
+    for theme, data in concept_performance.items():
+        total = data["total_decisions"]
+        correct = data["correct_decisions"]
+        data["success_rate"] = round((correct / total) * 100, 1) if total > 0 else 0.0
+    
+    return dict(concept_performance)
+
+# Concept performance endpoint handler
+async def get_concept_performance(
+    current_user,
+    themes: Optional[str] = Query(None, description="Comma-separated list of themes to filter"),
+    time_unit: Optional[str] = Query(None, description="Time unit: 'week' or 'month'"),
+    num_periods: Optional[int] = Query(None, description="Number of time units to look back"),
+    start_date: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="End date (YYYY-MM-DD)")
+):
+    user_id = current_user.get("id")
+    books = await Book.find(Book.user_id == user_id).to_list()
+    
+    if not books:
+        raise HTTPException(status_code=404, detail="User doesn't have any books")
+    
+    # Convert to list of dictionaries
+    books_dict = [book.dict() for book in books]
+    
+    # Apply time filtering
+    filtered_books = _filter_books_by_time(
+        books_dict, time_unit, num_periods, start_date, end_date
+    )
+    
+    # Parse theme filter if provided
+    theme_list = themes.split(",") if themes else None
+    
+    # Aggregate concept performance
+    concept_performance = _aggregate_concept_performance(filtered_books, theme_list)
+    
+    return {"concept_performance": concept_performance}
+
+# Overall statistics endpoint handler
+async def get_overall_statistic(current_user):
+    user_id = current_user.get("id")    
+    books = await Book.find(Book.user_id == user_id).to_list()
+    
+    if not books:
+        raise HTTPException(status_code=404, detail="User doesn't have any books")
+    
+    books_dict = [book.dict() for book in books]
+    
+    child_analytic = _aggregate_child_analytic(books_dict)
+    return child_analytic["overall_stats"]

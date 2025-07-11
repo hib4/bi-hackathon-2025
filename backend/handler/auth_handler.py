@@ -6,7 +6,7 @@ from datetime import datetime
 from utils.jwt import create_access_token
 from google.auth.transport import requests
 from google.oauth2 import id_token
-from settings import settings
+from setting.settings import settings
 
 async def register(body: register_schema):
     user = await User.find_one(User.email == body.email)
