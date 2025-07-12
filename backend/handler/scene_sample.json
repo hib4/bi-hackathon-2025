@@ -1,44 +1,30 @@
 {
-    "user_id": "user123",
-    "title": "Petualangan Menabung Andi",
-    "tema": [
-        "menabung",
-        "kejujuran",
-        "pengelolaan uang"
+    "user_id": "68720d0d6a0d2694067fd18e",
+    "title": "Edo dan Kewirausahaan Sederhana",
+    "theme": [
+        "Kerja Keras",
+        "Kewirausahaan"
     ],
     "language": "indonesian",
     "status": "finished",
     "age_group": 11,
     "current_scene": 1,
-    "created_at": null,
-    "finished_at": null,
+    "created_at": "2025-01-25T08:00:00Z",
+    "finished_at": "2025-01-25T08:40:00Z",
     "maximum_point": 10,
     "story_flow": {
         "total_scene": 10,
-        "decision_point": [
-            2,
-            4,
-            6
-        ],
-        "ending": [
-            7,
-            8,
-            9,
-            10
-        ]
+        "decision_point": [2, 4, 6],
+        "ending": [7, 8, 9, 10]
     },
     "characters": [
         {
-            "name": "Andi",
-            "description": "Andi is an 11-year-old boy with short black hair and a curious mind. He loves learning new things and is very interested in saving money to buy things he loves."
+            "name": "Edo",
+            "description": "Edo is an 11-year-old boy who is very creative and dreams of starting his own small business. He learns about hard work and the challenges of being an entrepreneur."
         },
         {
-            "name": "Pak Budi",
-            "description": "Pak Budi is a friendly warung owner with a warm smile and a helpful nature. He is known in the neighborhood for his honesty and generosity."
-        },
-        {
-            "name": "Sari",
-            "description": "Sari is Andi's best friend, a cheerful girl with long hair. She is always ready to help Andi in making the right decisions."
+            "name": "Pak Hendra",
+            "description": "Pak Hendra is a friendly neighbor who runs a small bakery. He mentors Edo on running a small business."
         }
     ],
     "scene": [
@@ -46,9 +32,9 @@
             "scene_id": 1,
             "type": "narrative",
             "img_url": null,
-            "img_description": "Andi sitting at home with his parents discussing the importance of saving money.",
+            "img_description": "Edo looking at a lemonade stand setup in his neighborhood.",
             "voice_url": null,
-            "content": "Pada suatu hari yang cerah, Andi duduk bersama ayah dan ibunya di ruang tamu. Mereka sedang membicarakan tentang pentingnya menabung. 'Andi, menabung itu penting agar kamu bisa membeli barang yang kamu inginkan di masa depan,' kata Ayah. 'Iya, dan kamu bisa menyimpan uangmu di bank seperti Ayah,' tambah Ibu.",
+            "content": "Edo melihat anak-anak lain menjual minuman dingin di depan rumah mereka. Ia tertarik untuk mencoba berjualan juga agar bisa mendapatkan uang tambahan untuk membeli buku komik baru. Edo memutuskan untuk membuat es teh dan menjualnya.",
             "next_scene": 2,
             "branch": null,
             "lesson_learned": null,
@@ -58,36 +44,36 @@
             "scene_id": 2,
             "type": "decision_point",
             "img_url": null,
-            "img_description": "Sari standing in front of a warung counter, holding some change.",
+            "img_description": "Edo standing at his lemonade stand on a hot day, looking tired.",
             "voice_url": null,
-            "content": "Di warung, Pak Budi sedang sibuk melayani banyak pembeli. Saat memberikan kembalian, Pak Budi terburu-buru dan salah menghitung. Dia memberikan kembalian Rp 10.000 padahal seharusnya hanya Rp 5.000. Sari menyadari kesalahan ini. Apa yang sebaiknya Sari lakukan?",
+            "content": "Hari pertama berjualan sangat panas dan tidak banyak pembeli. Edo merasa lelah dan kecewa. Apa yang seharusnya Edo lakukan?",
             "next_scene": null,
             "branch": [
                 {
                     "choice": "baik",
-                    "teks": "Sari mengembalikan uang kembalian yang berlebih ke Pak Budi.",
-                    "moral_value": "Kejujuran lebih penting dari segalanya.",
+                    "teks": "Edo berusaha lebih keras dan mencari tempat berjualan yang lebih ramai.",
+                    "moral_value": "Tidak mudah menyerah saat menghadapi tantangan.",
                     "point": 5,
                     "next_scene": 3
                 },
                 {
                     "choice": "buruk",
-                    "teks": "Sari menyimpan uang kembalian yang berlebih.",
-                    "moral_value": "Mengambil hak orang lain tidaklah benar.",
-                    "point": -5,
+                    "teks": "Edo menyerah dan berhenti berjualan.",
+                    "moral_value": "Sifat mudah menyerah tidak akan membawa kesuksesan.",
+                    "point": -2,
                     "next_scene": 5
                 }
             ],
             "lesson_learned": null,
-            "selected_choice": null
+            "selected_choice": "baik"
         },
         {
             "scene_id": 3,
             "type": "narrative",
             "img_url": null,
-            "img_description": "Pak Budi smiling gratefully at Sari for her honesty.",
+            "img_description": "Edo is setting up his lemonade stand near a busy market area.",
             "voice_url": null,
-            "content": "Sari mengembalikan uang kembalian yang berlebih kepada Pak Budi. Pak Budi tersenyum dan berterima kasih kepada Sari. 'Kamu anak yang jujur, Sari! Terima kasih sudah mengembalikan uang ini,' kata Pak Budi sambil memberikan permen sebagai hadiah.",
+            "content": "Edo tidak menyerah. Ia pindah ke dekat pasar yang lebih ramai. Beberapa orang mulai tertarik dengan es tehnya. Edo merasa senang dan bersemangat.",
             "next_scene": 4,
             "branch": null,
             "lesson_learned": null,
@@ -97,36 +83,36 @@
             "scene_id": 4,
             "type": "decision_point",
             "img_url": null,
-            "img_description": "Andi and Sari looking at a toy they want to buy with their savings.",
+            "img_description": "Edo talking to Pak Hendra, who is offering advice on running a business.",
             "voice_url": null,
-            "content": "Andi dan Sari melihat mainan yang sangat mereka inginkan di toko. Namun, uang tabungan Andi belum cukup. Apa yang sebaiknya Andi lakukan?",
+            "content": "Pak Hendra, pemilik toko roti, melihat kerja keras Edo. Pak Hendra menawarkan tips tentang cara mengelola uang hasil jualan dengan bijak. Pak Hendra bertanya, 'Edo, apa rencanamu dengan uang yang kamu dapat?' Apa yang akan Edo lakukan?",
             "next_scene": null,
             "branch": [
                 {
                     "choice": "baik",
-                    "teks": "Andi memutuskan untuk menabung lebih lama hingga uangnya cukup.",
-                    "moral_value": "Kesabaran dalam menabung membuahkan hasil.",
+                    "teks": "Edo mencatat semua pengeluaran dan pemasukan untuk memastikan uangnya digunakan dengan baik.",
+                    "moral_value": "Pencatatan keuangan itu penting untuk bisnis.",
                     "point": 5,
                     "next_scene": 7
                 },
                 {
                     "choice": "buruk",
-                    "teks": "Andi meminjam uang dari Sari untuk membeli mainan itu sekarang.",
-                    "moral_value": "Meminjam uang tanpa rencana bisa menjadi kebiasaan buruk.",
+                    "teks": "Edo langsung menghabiskan uangnya untuk membeli buku komik tanpa mencatat.",
+                    "moral_value": "Pengeluaran tanpa rencana bisa membuat bisnis bangkrut.",
                     "point": -3,
                     "next_scene": 8
                 }
             ],
             "lesson_learned": null,
-            "selected_choice": null
+            "selected_choice": "buruk"
         },
         {
             "scene_id": 5,
             "type": "narrative",
             "img_url": null,
-            "img_description": "Sari feeling guilty while holding the extra change.",
+            "img_description": "Edo looking sad and defeated, packing up his lemonade stand.",
             "voice_url": null,
-            "content": "Sari menyimpan uang kembalian yang berlebih dan merasa senang sesaat. Namun, kemudian dia merasa bersalah karena tahu bahwa itu bukan miliknya. Dia bingung dan tidak nyaman.",
+            "content": "Edo menyerah. Ia merasa berjualan terlalu sulit. Ia pulang dengan perasaan kecewa dan menyesal karena tidak mencoba lebih keras.",
             "next_scene": 6,
             "branch": null,
             "lesson_learned": null,
@@ -136,85 +122,81 @@
             "scene_id": 6,
             "type": "decision_point",
             "img_url": null,
-            "img_description": "Sari contemplating whether to return the money or not.",
+            "img_description": "Edo talking to his mother about his failure. His mother is supportive and encouraging.",
             "voice_url": null,
-            "content": "Sari ragu apakah harus mengembalikan uang tersebut atau tidak. Apa yang sebaiknya Sari lakukan?",
+            "content": "Ibu melihat Edo sedih. 'Kenapa kamu berhenti, Edo?' tanya Ibu. 'Terlalu sulit, Bu,' jawab Edo. Ibu memberikan nasihat. Apa yang akan Edo lakukan?",
             "next_scene": null,
             "branch": [
                 {
                     "choice": "baik",
-                    "teks": "Sari memutuskan untuk kembali ke warung dan mengembalikan uangnya.",
-                    "moral_value": "Lebih baik terlambat daripada tidak sama sekali.",
+                    "teks": "Edo mendengarkan nasihat Ibu dan berjanji akan mencoba lagi dengan strategi yang berbeda.",
+                    "moral_value": "Belajar dari kesalahan adalah bagian dari proses belajar.",
                     "point": 3,
                     "next_scene": 9
                 },
                 {
                     "choice": "buruk",
-                    "teks": "Sari memutuskan untuk tetap menyimpan uangnya.",
-                    "moral_value": "Keputusan yang salah bisa membuat hati tidak tenang.",
-                    "point": -5,
+                    "teks": "Edo tetap bersikeras untuk tidak berjualan lagi.",
+                    "moral_value": "Ketidakmauan untuk mencoba lagi menghambat kemajuan.",
+                    "point": -1,
                     "next_scene": 10
                 }
             ],
             "lesson_learned": null,
-            "selected_choice": null
+            "selected_choice": "baik"
         },
         {
             "scene_id": 7,
             "type": "ending",
             "img_url": null,
-            "img_description": "Andi, happy and proud, holding the toy he bought with his own savings.",
+            "img_description": "Edo proudly showing his notebook of sales records to Pak Hendra, who is smiling.",
             "voice_url": null,
-            "content": "Andi dengan sabar menabung selama beberapa bulan. Akhirnya, dia bisa membeli mainan yang dia inginkan dengan uangnya sendiri. Dia merasa sangat bangga dan senang.",
+            "content": "Edo mulai mencatat semua uang yang ia dapat. Ia belajar cara mengelola bisnis kecil-kecilan. Edo berhasil mendapatkan uang yang cukup untuk membeli buku komik dan ia juga bisa menabung sisanya. Ia sangat bangga.",
             "next_scene": null,
             "branch": null,
-            "lesson_learned": "Kesabaran dalam menabung akan membawa kepuasan.",
+            "lesson_learned": "Kerja keras dan pengelolaan keuangan yang baik adalah kunci keberhasilan dalam bisnis.",
             "selected_choice": null
         },
         {
             "scene_id": 8,
             "type": "ending",
             "img_url": null,
-            "img_description": "Andi looking worried as he owes Sari money.",
+            "img_description": "Edo holding his new comic book but looking worried about his finances.",
             "voice_url": null,
-            "content": "Andi meminjam uang dari Sari dan membeli mainan itu. Namun, dia merasa cemas karena harus segera mengembalikan uang Sari. Dia belajar bahwa meminjam uang bisa membuat stres.",
+            "content": "Edo membeli buku komik dan uangnya habis. Ia tidak mencatat pengeluaran dan ia kehabisan modal untuk berjualan lagi. Ia menyesal karena tidak mendengarkan nasihat Pak Hendra.",
             "next_scene": null,
             "branch": null,
-            "lesson_learned": "Meminjam uang tanpa perhitungan bisa menjadi beban.",
+            "lesson_learned": "Pengeluaran tanpa perencanaan bisa menghabiskan modal dan merugikan diri sendiri.",
             "selected_choice": null
         },
         {
             "scene_id": 9,
             "type": "ending",
             "img_url": null,
-            "img_description": "Sari returning the money to Pak Budi, feeling relieved.",
+            "img_description": "Edo happily setting up his lemonade stand again, feeling motivated and ready to try again.",
             "voice_url": null,
-            "content": "Sari akhirnya memutuskan untuk mengembalikan uang kepada Pak Budi. Dia merasa lega dan lebih baik setelah melakukannya. Kejujuran membuat hati tenang.",
+            "content": "Edo mendengarkan nasihat ibunya dan mencoba lagi. Kali ini ia lebih sabar dan berusaha lebih keras. Ia berhasil mendapatkan uang yang cukup. Edo belajar bahwa kegagalan adalah bagian dari proses belajar.",
             "next_scene": null,
             "branch": null,
-            "lesson_learned": "Mengakui kesalahan dan memperbaikinya adalah tindakan yang tepat.",
+            "lesson_learned": "Kegagalan adalah pelajaran yang berharga, pantang menyerah adalah kunci kesuksesan.",
             "selected_choice": null
         },
         {
             "scene_id": 10,
             "type": "ending",
             "img_url": null,
-            "img_description": "Sari feeling uneasy while holding the extra change.",
+            "img_description": "Edo sitting sadly at home, having given up on his lemonade stand.",
             "voice_url": null,
-            "content": "Sari memutuskan untuk menyimpan uangnya, tetapi dia terus merasa tidak nyaman. Dia belajar bahwa keputusan yang salah bisa membuat hati tidak tenang.",
+            "content": "Edo tetap tidak mau berjualan lagi. Ia merasa terlalu sulit dan ia tidak jadi membeli buku komiknya. Ia belajar bahwa menyerah sebelum mencoba tidak akan membawa hasil.",
             "next_scene": null,
             "branch": null,
-            "lesson_learned": "Mengambil hak orang lain membuat hati tidak nyaman dan menimbulkan rasa bersalah.",
+            "lesson_learned": "Sifat mudah menyerah membuat kita kehilangan kesempatan dan impian.",
             "selected_choice": null
         }
     ],
     "user_story": {
         "visited_scene": [
-            1,
-            2,
-            3,
-            4,
-            7
+            1, 2, 3, 4, 8
         ],
         "choices": [
             {
@@ -224,15 +206,15 @@
             },
             {
                 "scene_id": 4,
-                "choice": "baik",
-                "point": 5
+                "choice": "buruk",
+                "point": -3
             }
         ],
-        "total_point": 10,
-        "finished_time": 600
+        "total_point": 2,
+        "finished_time": 1200
     },
     "cover_img_url": null,
-    "cover_img_description": "An illustration of a young boy named Andi standing in front of a local warung, holding a small piggy bank.",
-    "description": "This story follows Andi, a young boy learning about financial literacy in a culturally relevant setting. Through his interactions and decisions, he learns about saving, honesty, and budgeting.",
-    "estimated_reading_time": 600
+    "cover_img_description": "An illustration of Edo setting up a simple lemonade stand, looking determined.",
+    "description": "Edo learns about entrepreneurship and the importance of perseverance when starting his own small business selling lemonade.",
+    "estimated_reading_time": 1200
 }
