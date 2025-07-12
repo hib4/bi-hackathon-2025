@@ -2,7 +2,7 @@ import azure.cognitiveservices.speech as speechsdk
 from utils.azure_blob_storage import upload_file_to_blob
 from fastapi.concurrency import run_in_threadpool
 from fastapi import HTTPException
-from settings import settings
+from setting.settings import settings
 from uuid import uuid4
 import base64
 import threading
@@ -29,10 +29,10 @@ AVAILABLE_VOICES = {
         "name": "Nova Turbo ✨",
         "description": "Suara ceria yang membuat hari-harimu berkilau"
     },
-    # "en-US-CoraMultilingualNeural": {
-    #     "name": "Cora 🍭",
-    #     "description": "Suara hangat seperti kakak perempuan yang baik hati"
-    # },
+    "en-US-CoraMultilingualNeural": {
+        "name": "Cora 🍭",
+        "description": "Suara hangat seperti kakak perempuan yang baik hati"
+    },
     # "en-US-ChristopherMultilingualNeural": {
     #     "name": "Christopher 🏆",
     #     "description": "Suara tegas dan heroik untuk cerita petualangan"

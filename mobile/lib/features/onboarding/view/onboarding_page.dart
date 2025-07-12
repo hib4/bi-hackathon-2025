@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kanca/features/auth/auth.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/utils.dart';
@@ -16,28 +17,30 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   final List<_OnboardingData> _onboardingSections = [
     _OnboardingData(
-      image: Assets.images.onboarding1.image(),
+      image: Assets.images.artboard.image(),
       title: RichText(
         textAlign: TextAlign.center,
-        text: const TextSpan(
-          style: TextStyle(
+        text: TextSpan(
+          style: GoogleFonts.fredoka(
             fontSize: 32,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: const Color(0XFF373737),
           ),
-          children: [
-            TextSpan(text: 'Hi! Selamat datang di '),
+          children: const [
+            TextSpan(text: 'Yuk, Mulai Petualangan '),
             TextSpan(
-              text: 'Kanca!',
+              text: 'Ceritamu!',
               style: TextStyle(
-                color: Color(0XFF1BB79E),
+                color: Color(
+                  0XFFFF9F00,
+                ), // Use the same color as in the original code
               ),
             ),
           ],
         ),
       ),
       subtitle: const Text(
-        'Teman cerita seru dan cerdas si kecil.',
+        'Di Kanca, kamu bisa buat cerita seru sendiri, belajar nilai baik & jadi jago atur uang, semuanya sambil main!',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black,
@@ -46,18 +49,31 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ),
     ),
     _OnboardingData(
-      image: Assets.images.onboarding1.image(), // Replace with actual image
-      title: const Text(
-        'Eksplorasi Cerita',
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.w600,
-          color: Colors.black,
-        ),
+      image: Assets.images.artboard.image(), // Replace with actual image
+      title:RichText(
         textAlign: TextAlign.center,
+        text: TextSpan(
+          style: GoogleFonts.fredoka(
+            fontSize: 32,
+            fontWeight: FontWeight.w600,
+            color: const Color(0XFF373737),
+          ),
+          children: const [
+            TextSpan(text: 'Pilih '),
+            TextSpan(
+              text: 'Jalan Ceritamu, ',
+              style: TextStyle(
+                color: Color(
+                  0XFFFF9F00,
+                ), // Use the same color as in the original code
+              ),
+            ),
+            TextSpan(text: 'Petik Pelajarannya!'),
+          ],
+        ),
       ),
       subtitle: const Text(
-        'Baca dan dengarkan cerita menarik yang edukatif.',
+        'Akhir cerita tergantung pilihanmu! Belajar menabung, jujur, dan bijak dengan cara yang seru & interaktif.',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black,
@@ -66,18 +82,30 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ),
     ),
     _OnboardingData(
-      image: Assets.images.onboarding1.image(), // Replace with actual image
-      title: const Text(
-        'Belajar Sambil Bermain',
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.w600,
-          color: Colors.black,
-        ),
+      image: Assets.images.artboard.image(), // Replace with actual image
+      title: RichText(
         textAlign: TextAlign.center,
+        text: TextSpan(
+          style: GoogleFonts.fredoka(
+            fontSize: 32,
+            fontWeight: FontWeight.w600,
+            color: const Color(0XFF373737),
+          ),
+          children: const [
+            TextSpan(text: 'Ciptakan Momen, '),
+            TextSpan(
+              text: 'Bangun Nilai',
+              style: TextStyle(
+                color: Color(
+                  0XFFFF9F00,
+                ), // Use the same color as in the original code
+              ),
+            ),
+          ],
+        ),
       ),
       subtitle: const Text(
-        'Kembangkan imajinasi dan pengetahuan si kecil.',
+        'Bersama Kanca, belajar menjadi perjalanan berharga untuk masa depan anak yang bijak.',
         style: TextStyle(
           fontSize: 16,
           color: Colors.black,
@@ -115,9 +143,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0XFFFFFAE5),
+      backgroundColor: const Color(0XFFFFF8E8),
       body: Stack(
         children: [
+          // Background image
+          Assets.images.artboard.image(
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
           PageView.builder(
             controller: _pageController,
             itemCount: _onboardingSections.length,
@@ -128,20 +162,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
             },
             itemBuilder: (context, index) {
               final data = _onboardingSections[index];
-              return Column(
-                children: [
-                  data.image,
-                  42.vertical,
-                  data.title.withPadding(
-                    left: 24,
-                    right: 24,
-                  ),
-                  32.vertical,
-                  data.subtitle.withPadding(
-                    left: 24,
-                    right: 24,
-                  ),
-                ],
+              return Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + 90,
+                  left: 32,
+                  right: 32,
+                ),
+                child: Column(
+                  children: [
+                    data.title,
+                    16.vertical,
+                    data.subtitle,
+                  ],
+                ),
               );
             },
           ),
@@ -162,7 +195,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     'Skip',
                     style: TextStyle(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Color(0XFFFF9F00),
                     ),
                   ),
                 ),
@@ -192,7 +225,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         margin: const EdgeInsets.only(right: 8),
                         decoration: BoxDecoration(
                           color: isActive
-                              ? const Color(0XFF1BB79E)
+                              ? const Color(0XFFFF9F00)
                               : const Color(0XFFD9D9D9),
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -203,13 +236,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ElevatedButton(
                     onPressed: _onNext,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0XFF1BB79E),
+                      backgroundColor: const Color(0XFFFF9F00),
                       minimumSize: const Size(double.infinity, 56),
                     ),
                     child: Text(
                       _currentIndex == _onboardingSections.length - 1
                           ? 'Mulai'
-                          : 'Next',
+                          : 'Lanjut',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

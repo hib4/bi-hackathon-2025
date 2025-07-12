@@ -15,10 +15,12 @@ dependencies:
   flutter_hooks: ^0.21.2
   flutter_localizations:
     sdk: flutter
+  flutter_secure_storage: ^9.2.4
   flutter_svg: ^2.2.0
   freezed_annotation: ^3.1.0
   get_it: ^8.0.3
   google_fonts: ^6.2.1
+  http: ^1.4.0
   intl: ^0.20.2
   json_annotation: ^4.9.0
   logger: ^2.6.0
@@ -51,15 +53,15 @@ flutter_gen:
     flutter_svg: true
 
 flutter_native_splash:
-  color: "#FFFAE5"
+  color: "#FFFFF8"
   image: splash_screen.png
-  color_dark: "#FFFAE5"
+  color_dark: "#FFFFF8"
   image_dark: splash_screen.png
 
   android_12:
-    color: "#FFFAE5"
+    color: "#FFFFF8"
     image: splash_screen.png
-    color_dark: "#FFFAE5"
+    color_dark: "#FFFFF8"
     image_dark: splash_screen.png
 
   android: true
