@@ -1,5 +1,5 @@
 from fastapi.concurrency import run_in_threadpool
-from settings import settings
+from setting.settings import settings
 from openai import OpenAI
 import json
 

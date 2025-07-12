@@ -113,3 +113,24 @@ app.*.map.json
 
 # Generated l10n files
 lib/l10n/gen/
+
+# Code generation
+**/*.g.dart
+**/*.gr.dart
+**/*.freezed.dart
+**/*.config.dart
+**/*.gen.dart
+*.injectable.dart
+*.mocks.dart
+
+
+# JSON serializable, Freezed, Injectable, etc.
+lib/**.g.dart
+lib/**.gr.dart
+lib/**.freezed.dart
+lib/**.config.dart
+lib/**.gen.dart
+lib/**.injectable.dart
+test/**.mocks.dart
+
+.env

@@ -1,0 +1,18 @@
+targets:
+  $default:
+    sources:
+      include:
+        - lib/**env.dart
+        - lib/**_value.dart
+        - lib/**_status.dart
+        - lib/**_model.dart
+        - lib/**_data.dart
+        - lib/**_bloc.dart
+        - lib/**_event.dart
+        - lib/**_state.dart
+        - lib/**_cubit.dart
+        - lib/$lib$
+        - $package$
+        - pubspec.yaml
+      exclude:
+        - test/**

@@ -1,6 +1,6 @@
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
-from settings import settings
+from setting.settings import settings
 from models import User
 
 JWT_SECRET = settings.JWT_SECRET

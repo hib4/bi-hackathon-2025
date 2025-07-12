@@ -1,7 +1,7 @@
 from utils.ai.concurrent import generate_multiple_image_and_voice_concurrently
 from utils.api_request import post
 from fastapi import HTTPException
-from settings import settings
+from setting.settings import settings
 from schema.request import book_schema
 from schema.response.book_card import Book_Card
 from collections import defaultdict
@@ -45,19 +45,29 @@ async def create_book(body: book_schema.create_book_schema, current_user):
         for scene in scenes
     ]
 
-    requests = []
+    cover_img_description = book.get("cover_img_description")
+    characters = book.get("characters")
 
+    requests = []
     requests.append({
         "scene_id": None,
         "type": "cover_image",
-        "prompt": book.get("cover_img_description")
+        "prompt": _add_character_description(
+            characters=characters,
+            img_description=cover_img_description
+        )
     })
 
     for extracted_scene in extracted_scenes:
+        img_description = extracted_scene.get("img_description")
+
         requests.append({
             "scene_id": extracted_scene.get("scene_id"),
             "type": "image",
-            "prompt": extracted_scene.get("img_description")
+            "prompt": _add_character_description(
+                characters=characters,
+                img_description=img_description
+            )
         })
         requests.append({
             "scene_id": extracted_scene.get("scene_id"),
@@ -114,8 +124,7 @@ async def create_book(body: book_schema.create_book_schema, current_user):
     return {
         "message": "successfully create new book",
         "data":{
-            # "id": str(new_book.id)
-            "data": new_book
+            "id": str(new_book.id)
         }
     }
 
@@ -137,6 +146,23 @@ async def get_book_by_id(id: str, current_user):
     return {
         "data": book
     }
+
+def _add_character_description(characters: list, img_description: str) -> str:
+    prompt = f"description: {img_description}, cartoon style, this image is for kids, used for interactive book, be family friendly."
+
+    names = [item["name"] for item in characters]
+    descriptions = [item["description"] for item in characters]
+
+    if img_description in names:
+        prompt += " character description: "
+
+    for description in descriptions:
+        prompt += f"{description}, "
+
+    if len(descriptions) > 0:
+        prompt += "."
+
+    return prompt
 
 def _format_book_cards(books: list) -> list:
     book_cards = []

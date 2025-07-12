@@ -1,7 +1,7 @@
 from fastapi.concurrency import run_in_threadpool
 from utils.azure_blob_storage import upload_file_to_blob
 from openai import OpenAI
-from settings import settings
+from setting.settings import settings
 from uuid import uuid4
 import json
 
@@ -26,13 +26,13 @@ def _generate_image(image_prompt):
         extra_body={
             "response_extension": "png",
             "width": 512,
-            "height": 512,
+            "height": 1024,
             "num_inference_steps": 4,
-            "negative_prompt": "",
-            "seed": -1,
+            "negative_prompt": "unproportional, blur, distorted.",
+            "seed": 1,
             "loras": None
         },
-        prompt= f"{prompt}. Explcit instruction: cartoon style, used for kids, be family friendly"
+        prompt= f"{prompt}"
     )
     json_result = json.loads(response.to_json())
     image_result = json_result.get("data")[0]
