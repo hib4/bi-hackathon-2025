@@ -79,8 +79,8 @@ AVAILABLE_VOICES = {
     }
 }
 
-CLIENT_TIMEOUT = 300000000000
-SERVICE_TIMEOUT_THRESHOLD = 300000000000
+CLIENT_TIMEOUT = 3000
+SERVICE_TIMEOUT_THRESHOLD = 3000
 
 def _synthesize_speech(request) -> str:
     scene_id = request.get("scene_id")
