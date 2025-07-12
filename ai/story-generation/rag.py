@@ -95,13 +95,13 @@ class FinancialLiteracyRAG:
             {
                 "user_id": user_id,
                 "title": "<judul cerita akan diisi oleh LLM>",
-                "tema": [
+                "theme": [
                     """
                     Menabung, Berbagi, Kebutuhan vs Keinginan, Instrumen Keuangan, Kejujuran, 
                     Kerja Keras, Tanggung Jawab, Perencanaan Keuangan, Nilai Uang, Konsep Dasar Uang,
                     Donasi, Berbelanja dengan Bijak, Kewirausahaan, Gotong Royong, Amanah, Investasi,
                     """
-                    "<pilih 1 - 3 tema yang sesuai dari pilihan tersebut, pastikan sama dan konsisten dengan pilihan tersebut"
+                    "<pilih 1 - 3 tema yang sesuai dari pilihan tersebut, pastikan sama dan konsisten dengan pilihan tersebut, kembalikan dalam bentuk list>"
                 ],
                 "language": "indonesian",
                 "status": "in_progress",
@@ -141,14 +141,14 @@ class FinancialLiteracyRAG:
                         "branch": [
                             {
                                 "choice": "baik",
-                                "teks": "<buat teks pilihan yang sesuai dengan konteks cerita dalam bahasa Indonesia, pilihan ini bersifat positif atau negatif>",
+                                "content": "<buat teks pilihan yang sesuai dengan konteks cerita dalam bahasa Indonesia, pilihan ini bersifat positif atau negatif>",
                                 "moral_value": "<buat nilai moral yang sesuai dengan pilihan dalam bahasa Indonesia>",
                                 "point": "<buat poin yang sesuai dengan pilihan, bisa positif atau negatif (integer)>",
                                 "next_scene": "<buat nomor scene selanjutnya yang sesuai dengan percabangan (integer)>",
                             },
                             {
                                 "choice": "buruk",
-                                "teks": "<buat teks pilihan yang sesuai dengan konteks cerita dalam bahasa Indonesia, pilihan ini bersifat negatif atau positif>",
+                                "content": "<buat teks pilihan yang sesuai dengan konteks cerita dalam bahasa Indonesia, pilihan ini bersifat negatif atau positif>",
                                 "moral_value": "<buat nilai moral yang sesuai dengan pilihan dalam bahasa Indonesia>",
                                 "point": "<buat poin yang sesuai dengan pilihan, bisa positif atau negatif (integer)>",
                                 "next_scene": "<buat nomor scene selanjutnya yang sesuai dengan percabangan (integer)>",
