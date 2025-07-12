@@ -300,7 +300,7 @@ async def get_concept_performance(
     )
     
     # Parse theme filter if provided
-    theme_list = themes.split(",") if themes else None
+    theme_list = themes
     
     # Aggregate concept performance
     concept_performance = _aggregate_concept_performance(filtered_books, theme_list)
