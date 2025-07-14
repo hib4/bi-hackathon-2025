@@ -47,7 +47,7 @@ class ChildMonitoringRAG:
 
         self.vectorstore = None
         self.retriever = None
-        
+
         self.intent_classifier = IntentClassifier(
             model_name="gpt-4o-mini",
         )
@@ -134,29 +134,50 @@ class ChildMonitoringRAG:
     @staticmethod
     def build_output_format_template() -> str:
         """
-        Build the output format template (JSON schema) for the LLM response.
-        Returns a string representing the desired JSON schema.
+        Build the output format template for chatbot response.
+        Returns a conversational text format instead of JSON.
         """
-        return json.dumps(
-            {
-                "analysis": "string (Ringkasan analisis pola belajar dan pemahaman anak berdasarkan data yang diberikan. Jelaskan kekuatan dan area yang butuh perhatian. Sampaikan dalam bentuk narasi yang interaktif dan mudah dipahami oleh orang tua atau guru, seolah-olah Anda sedang berkomunikasi langsung dengan mereka.)",
-                "key_concepts_status": {
-                    "mastered": "array of string (Daftar konsep literasi finansial yang telah dikuasai anak, ditandakan dengan success_rate >= 80'%' contoh: 'Menabung')",
-                    "learning": "array of string (Daftar konsep yang sedang dalam proses dipelajari, ditandakan dengan success_rate >= 60 - 80'%' contoh: 'Berbelanja')",
-                    "struggling": "array of string (Daftar konsep yang masih menjadi tantangan bagi anak, ditandakan dengan success_rate < 60'%' contoh: 'Berbagi')",
-                    "unencountered": "array of string (Daftar konsep yang belum pernah ditemui anak dalam cerita, jika relevan)",
-                },
-                "suggestions": [
-                    {
-                        "category": "string (Kategori saran, contoh: 'Aktivitas di Rumah', 'Diskusi Orang Tua-Anak', 'Penggunaan Aplikasi')",
-                        "description": "string (Saran konkret dan kegiatan praktis yang bisa dilakukan orang tua atau guru untuk membantu anak meningkatkan pemahaman konsep ini.)",
-                        "related_concepts": "array of string (Konsep literasi finansial yang relevan dengan saran ini, contoh: ['Menabung', 'Perencanaan Keuangan'])",
-                    }
-                ],
-                "general_notes": "string (Informasi tambahan singkat, disclaimer, atau catatan umum jika ada.)",
-            },
-            indent=2,
-        )
+        return """
+            Berikan respons dalam format percakapan yang natural dan ramah untuk orang tua/guru tentang perkembangan literasi finansial anak. Apabila diperlukan juga gunakan emoji yang sesuai. Gunakan format berikut:
+
+            Mulai dengan sapaan hangat dan ringkasan singkat tentang perkembangan anak.
+
+            Apabila orang tua/guru meminta ringkasan perkembangan anak untuk setiap tema, gunakan format berikut:
+                **Yang sudah dikuasai dengan baik:**
+                - Sebutkan konsep-konsep yang success_rate >= 80'%' dengan bahasa yang positif
+
+                **Yang sedang dipelajari:**
+                - Sebutkan konsep-konsep yang success_rate 60-80'%' dengan nada mendukung
+
+                **Yang masih butuh perhatian:**
+                - Sebutkan konsep-konsep yang success_rate < 60'%' dengan nada yang tetap positif dan memberikan harapan
+                Jika ada data yang tidak tersedia, jelaskan dengan sopan.
+            
+            Apabila orang tua/guru meminta ringkasan perkembangan anak dalam periode waktu tertentu, gunakan format berikut:
+            **Perkembangan Anak dalam Periode Tersebut:**
+            - Berikan ringkasan perkembangan anak dalam periode waktu yang diminta, dengan fokus pada perubahan positif dan area yang perlu perhatian.
+            - Gunakan bahasa yang mudah dipahami dan tidak menggurui.
+            - Jika ada referensi dari panduan, sertakan dengan jelas.
+            
+            Apabila orang tua/guru meminta ringkasan umum atau statistik performa anak, gunakan format berikut:
+            **Ringkasan Umum Performa Anak:**
+            - Berikan ringkasan umum tentang progres belajar anak, dengan fokus pada kekuatan dan area yang perlu peningkatan.
+            - Gunakan bahasa yang mudah dipahami dan tidak menggurui.
+            - Jika ada referensi dari panduan, sertakan dengan jelas.
+            - Jika ada data yang tidak tersedia, jelaskan dengan sopan.
+            
+            Apabila orang tua/guru meminta saran atau tips, gunakan format berikut:
+            **Saran untuk Orang Tua/Guru:**
+            - Berikan saran yang relevan dengan perkembangan anak
+            - Gunakan bahasa yang mudah dipahami dan tidak menggurui
+            - Sertakan contoh konkret atau aktivitas yang bisa dilakukan bersama anak
+            - Jika ada referensi dari panduan, sertakan dengan jelas
+            
+
+            Akhiri dengan kata-kata motivasi dan dukungan untuk orang tua/guru.
+
+            Pastikan seluruh respons terasa seperti sedang berbicara langsung dengan orang tua/guru, bukan laporan formal.
+        """
 
     def make_backend_api_call(self, api_details: dict) -> dict[str, str]:
         """
@@ -212,9 +233,7 @@ class ChildMonitoringRAG:
 
         return response.json()
 
-    def create_prompt(
-        self, query: str, child_age: int
-    ) -> PromptValue:
+    def create_prompt(self, query: str, child_age: int) -> PromptValue:
         """
         Creates a formatted prompt for the LLM, combining children's data context and RAG context.
         """
@@ -231,7 +250,7 @@ class ChildMonitoringRAG:
                 print(f"Children's data context: {children_data_context}")
             except Exception as e:
                 print(f"An exception occurred with details {e}")
-        
+
         # Get RAG context documents
         print("Retrieving RAG context documents...")
         rag_context_docs = []
@@ -245,7 +264,7 @@ class ChildMonitoringRAG:
         else:
             print("Retriever not initialized. Ensure initialize_rag() was called.")
             rag_context_docs = []
-            
+
         rag_context_text = "\n\n".join([doc.page_content for doc in rag_context_docs])
         if not rag_context_text.strip():
             rag_context_text = (
@@ -272,8 +291,6 @@ class ChildMonitoringRAG:
 
         ---
         Format Output yang Diinginkan:
-        Harap berikan respons Anda dalam format JSON murni, tanpa teks atau *markdown* tambahan di luar blok JSON.
-        Berikut adalah struktur JSON yang diharapkan:
         {output_format}
 
         (Catatan: Jangan sertakan tanda '`' *markdown* di sekitar output JSON Anda. Hasilkan JSON murni.)
