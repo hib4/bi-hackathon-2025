@@ -3,6 +3,7 @@ import os
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
+from pydantic import SecretStr
 
 load_dotenv()
 
@@ -13,14 +14,15 @@ class IntentClassifier:
     for backend API calls.
     """
 
-    def __init__(self, llm_model_name: str = "gpt-4o-mini"):
+    def __init__(self, model_name: str = "gpt-4o-mini"):
         """
         Initializes the IntentClassifier with an LLM for classification.
         """
+        api_key = os.getenv("OPENAI_API_KEY")
         self.llm = ChatOpenAI(
-            model=llm_model_name,
+            model=model_name,
             temperature=0.1, # Lower temperature for more deterministic responses
-            openai_api_key=os.getenv("OPENAI_API_KEY"),
+            api_key=SecretStr(api_key) if api_key else None,
         )
         # Define the exact list of themes for the LLM to choose from, to ensure consistency
         self.financial_themes_list = [
@@ -114,7 +116,7 @@ class IntentClassifier:
         print(f"Classifying user query...")
         try:
             response = self.llm.invoke(formatted_prompt)
-            intent_data = json.loads(response.content.strip())
+            intent_data = json.loads(response.content.strip()) # type: ignore
             return intent_data
         except Exception as e:
             print(f"An unexpected error occurred during intent classification: {e}")
