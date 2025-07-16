@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from middleware.auth_middleware import get_current_user
-from handler.analytic_handler import get_analytic, get_concept_performance, get_overall_statistic
+from handler.analytic_handler import get_analytic, get_concept_performance, get_overall_statistic, get_performance_timeline
 from typing import Optional
 
 router = APIRouter()
@@ -21,6 +21,23 @@ async def get_concept_performance_route(
     return await get_concept_performance(
         current_user,
         themes=themes,
+        time_unit=time_unit,
+        num_periods=num_periods,
+        start_date=start_date,
+        end_date=end_date
+    )
+    
+# Add the performance timeline endpoint
+@router.get("/api/v1/analytic/performance-timeline")
+async def get_performance_timeline_route(
+    current_user=Depends(get_current_user),
+    time_unit: str = Query(None, description="Time unit: 'week' or 'month'"),
+    num_periods: Optional[int] = Query(None, description="Number of time units to look back from today"),
+    start_date: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="End date (YYYY-MM-DD)")
+):
+    return await get_performance_timeline(
+        current_user=current_user,
         time_unit=time_unit,
         num_periods=num_periods,
         start_date=start_date,

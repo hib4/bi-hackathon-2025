@@ -234,6 +234,114 @@ def _filter_books_by_time(
                 
     return filtered_books
 
+# New helper funtion for perfromance timeline and aggregation
+def _aggregate_timeline(
+    books: list,
+    time_unit: str = 'week',
+    num_periods: Optional[int] = None,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None
+):
+    """
+        Filter books based on time parameters for performance timeline, aggregating per week or month.
+    """
+    if not any([time_unit, start_date, end_date]):
+        return books
+    
+    # Filter books by start and end date if provided
+    if start_date or end_date:
+        start = datetime.strptime(start_date, "%Y-%m-%d").replace(tzinfo=timezone.utc) if start_date else None
+        end = datetime.strptime(end_date, "%Y-%m-%d").replace(tzinfo=timezone.utc) if end_date else None
+        
+        books = [
+            book for book in books
+            if (not start or book.get("created_at", datetime.min) >= start) and
+               (not end or book.get("created_at", datetime.max) <= end)
+        ]
+    elif num_periods:
+        now = datetime.now(timezone.utc)
+        start = now - timedelta(weeks=num_periods) if time_unit == 'week' else now - timedelta(days=30 * num_periods)
+        books = [book for book in books if book.get("created_at", datetime.min) >= start]
+
+    
+    # Then aggregate per time unit from start to end
+    timeline = defaultdict(lambda: {
+        "total_minutes_played": 0,
+        "stories_completed": 0,
+        "successes": 0,
+        "total_choices": 0,
+        "concepts_encountered": set(),
+        "active_days": set(),
+        "session_durations": []
+    })
+    
+    for book in books:
+        created_at = book.get("created_at")
+        if not created_at:
+            continue
+            
+        # Ensure created_at is offset-aware
+        if created_at.tzinfo is None:
+            created_at = created_at.replace(tzinfo=timezone.utc)
+        
+        # Determine the time unit key (weekly or monthly)
+        if time_unit == 'week':
+            week_start = (created_at - timedelta(days=created_at.weekday())).date()
+            time_key = week_start.isoformat()
+        elif time_unit == 'month':
+            time_key = created_at.strftime("%Y-%m")
+        else:
+            continue
+        
+        # Playing duration
+        week_data = timeline[time_key]
+        if "user_story" in book and "finished_time" in book["user_story"]:
+            minutes = book["user_story"]["finished_time"] / 60
+            week_data["total_minutes_played"] += minutes
+            week_data["session_durations"].append(minutes)
+            
+        # Count completed stories
+        if book.get("status") == "finished":
+            week_data["stories_completed"] += 1
+            
+        # Perfromance metrics
+        choices = book.get("user_story", {}).get("choices", [])
+        correct_choices = sum(1 for c in choices if c.get("choice") == "baik")
+        week_data["successes"] += correct_choices
+        week_data["total_choices"] += len(choices)
+        
+        # Concepts and active days
+        themes = book.get("tema", []) or book.get("theme", [])
+        week_data["concepts_encountered"].update(themes)
+        if created_at:
+            week_data["active_days"].add(created_at.date())
+        
+    # Prepare final timeline response
+    final_timeline = []
+    for time_key, data in timeline.items():
+        total_choices = data["total_choices"]
+        success_rate = round((data["successes"] / total_choices) * 100, 1) if total_choices > 0 else 0.0
+        
+        avg_session = (
+            sum(data["session_durations"]) / len(data["session_durations"])
+            if data["session_durations"] else 0.0
+        )
+        
+        final_timeline.append({
+            "time_unit": time_key,
+            "metrics": {
+                "total_minutes_played": round(data["total_minutes_played"], 1),
+                "stories_completed": data["stories_completed"],
+                "success_rate": success_rate,
+                "concepts_encountered": list(data["concepts_encountered"]),
+                "active_days": len(data["active_days"]),
+                "average_session_duration": round(avg_session, 1)
+            }
+        })
+        final_timeline.sort(key=lambda x: x["time_unit"], reverse=True)
+    
+    return final_timeline
+
 # New helper for concept performance aggregation
 def _aggregate_concept_performance(books: list, themes: Optional[List[str]] = None) -> dict:
     """Aggregate concept performance from books"""
@@ -306,6 +414,28 @@ async def get_concept_performance(
     concept_performance = _aggregate_concept_performance(filtered_books, theme_list)
     
     return {"concept_performance": concept_performance}
+
+# Performance timeline endpoint handler
+async def get_performance_timeline(
+    current_user,
+    time_unit: str = Query(None, description="Time unit: 'week' or 'month'"),
+    num_periods: Optional[int] = Query(None, description="Number of time units to look back"),
+    start_date: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="End date (YYYY-MM-DD)")
+):
+    user_id = current_user.get("id")
+    books = await Book.find(Book.user_id == user_id).to_list()
+    
+    if not books:
+        raise HTTPException(status_code=404, detail="User doesn't have any books")
+    
+    # Convert to list of dictionaries
+    books_dict = [book.dict() for book in books]
+    
+    # Aggregate performance timeline
+    timeline = _aggregate_timeline(books_dict, time_unit, num_periods, start_date, end_date)
+    
+    return {"performance_timeline": timeline}
 
 # Overall statistics endpoint handler
 async def get_overall_statistic(current_user):
