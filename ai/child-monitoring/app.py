@@ -75,11 +75,9 @@ main_llm = ChatOpenAI(
 class ChatRequest(BaseModel):
     message: str = Field(..., description="User's message/question")
     child_age: int = Field(..., ge=3, le=18, description="Child's age in years")
-    session_id: Optional[str] = Field(None, description="Optional session identifier")
 
 class ChatResponse(BaseModel):
     response: str
-    session_id: Optional[str] = None
 
 class HealthResponse(BaseModel):
     status: str
@@ -106,7 +104,7 @@ async def root():
         }
     }
 
-async def generate_streaming_response(prompt_value, session_id: Optional[str] = None) -> AsyncGenerator[str, None]:
+async def generate_streaming_response(prompt_value) -> AsyncGenerator[str, None]:
     """
     Generate streaming response from the LLM
     """
@@ -117,7 +115,6 @@ async def generate_streaming_response(prompt_value, session_id: Optional[str] = 
                 # Format as Server-Sent Events
                 data = {
                     "content": chunk.content,
-                    "session_id": session_id,
                     "type": "content"
                 }
                 yield f"data: {json.dumps(data)}\n\n"
@@ -128,7 +125,6 @@ async def generate_streaming_response(prompt_value, session_id: Optional[str] = 
         # Send completion signal
         completion_data = {
             "content": "",
-            "session_id": session_id,
             "type": "complete"
         }
         yield f"data: {json.dumps(completion_data)}\n\n"
@@ -137,7 +133,6 @@ async def generate_streaming_response(prompt_value, session_id: Optional[str] = 
         # Send error signal
         error_data = {
             "content": f"Error generating response: {str(e)}",
-            "session_id": session_id,
             "type": "error"
         }
         yield f"data: {json.dumps(error_data)}\n\n"
@@ -165,7 +160,7 @@ async def chat_stream(request: ChatRequest):
         
         # Return streaming response
         return StreamingResponse(
-            generate_streaming_response(prompt_value, request.session_id),
+            generate_streaming_response(prompt_value),
             media_type="text/plain",
             headers={
                 "Cache-Control": "no-cache",
@@ -204,7 +199,6 @@ async def chat(request: ChatRequest):
         
         return ChatResponse(
             response=response.content, # type: ignore
-            session_id=request.session_id
         )
         
     except Exception as e:
