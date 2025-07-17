@@ -1,11 +1,13 @@
 from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from utils.jwt import verify_token
+from setting.settings import Settings
 
 security = HTTPBearer()
 
+
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
     token = credentials.credentials
     payload = verify_token(token)

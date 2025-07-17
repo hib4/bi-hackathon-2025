@@ -73,8 +73,9 @@ main_llm = ChatOpenAI(
 
 # Pydantic models for request/response
 class ChatRequest(BaseModel):
-    message: str = Field(..., description="User's message/question")
-    child_age: int = Field(..., ge=3, le=18, description="Child's age in years")
+    message: str = Field(..., description="User's message/question"),
+    child_age: int = Field(..., ge=3, le=18, description="Child's age in years"),
+    token: str = Field(None, description="Authentication token for internal use")
 
 class ChatResponse(BaseModel):
     response: str
@@ -111,7 +112,7 @@ async def generate_streaming_response(prompt_value) -> AsyncGenerator[str, None]
     try:
         # Stream the response from the LLM
         async for chunk in main_llm.astream(prompt_value.to_messages()):
-            if chunk.content:
+            if chunk.content:                
                 # Format as Server-Sent Events
                 data = {
                     "content": chunk.content,
@@ -151,11 +152,13 @@ async def chat_stream(request: ChatRequest):
         # Generate the prompt using your RAG system
         print(f"Processing query: {request.message}")
         print(f"Child age: {request.child_age}")
+        print(f"Token: {request.token}")
         
         # Create the prompt using your RAG system
         prompt_value = rag_system.create_prompt(
+            token=request.token,
             query=request.message,
-            child_age=request.child_age
+            child_age=request.child_age,
         )
         
         # Return streaming response

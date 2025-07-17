@@ -25,6 +25,7 @@ def create_access_token(user: User):
 def verify_token(token: str):
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM])
+        payload['token'] = token
         return payload
     except JWTError:
         return None

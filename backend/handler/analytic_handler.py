@@ -1,8 +1,10 @@
-from fastapi import HTTPException, Query
+from fastapi import HTTPException, Query, Request
 from collections import defaultdict
 from models.book import Book
 from datetime import datetime, timedelta, timezone
 from typing import Optional, List
+from utils.api_request import stream
+from setting.settings import settings
 
 async def get_analytic(current_user):
     user_id = current_user.get("id")
@@ -449,3 +451,21 @@ async def get_overall_statistic(current_user):
     
     child_analytic = _aggregate_child_analytic(books_dict)
     return child_analytic["overall_stats"]
+
+ai_url = settings.BOOK_STORY_GENERATION_URL
+async def chat_stream(
+        current_user,
+        message: str,
+        child_age: int,
+    ):
+    
+    request_body = {
+        "message": message,
+        "child_age": child_age,
+        "token": current_user.get('token')
+    }
+    
+    return await stream(
+        ai_url=f"{ai_url}/chat/stream",
+        body=request_body
+    )

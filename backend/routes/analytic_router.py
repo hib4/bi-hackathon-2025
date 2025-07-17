@@ -1,9 +1,14 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
+from pydantic import BaseModel, Field
 from middleware.auth_middleware import get_current_user
-from handler.analytic_handler import get_analytic, get_concept_performance, get_overall_statistic, get_performance_timeline
+from handler.analytic_handler import chat_stream, get_analytic, get_concept_performance, get_overall_statistic, get_performance_timeline
 from typing import Optional
 
 router = APIRouter()
+
+class ChatRequest(BaseModel):
+    message: str = Field(..., description="User's message/question")
+    child_age: int = Field(..., ge=3, le=18, description="Child's age in years")
 
 @router.get("/api/v1/analytic/dashboard")
 async def get_dashboard_analytic(current_user=Depends(get_current_user)):
@@ -43,7 +48,21 @@ async def get_performance_timeline_route(
         start_date=start_date,
         end_date=end_date
     )
-
+    
 @router.get("/api/v1/analytic/overall-statistics")
 async def get_overall_statistics_route(current_user=Depends(get_current_user)):
     return await get_overall_statistic(current_user)
+
+@router.post("/api/v1/chat/stream")
+async def chat_stream_route(
+    request: ChatRequest,
+    current_user=Depends(get_current_user),
+):
+    """
+    Endpoint for streaming chat responses.
+    """
+    return await chat_stream(
+        current_user=current_user,
+        message=request.message,
+        child_age=request.child_age,
+    )

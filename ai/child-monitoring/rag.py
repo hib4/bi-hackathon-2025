@@ -179,7 +179,7 @@ class ChildMonitoringRAG:
             Pastikan seluruh respons terasa seperti sedang berbicara langsung dengan orang tua/guru, bukan laporan formal.
         """
 
-    def make_backend_api_call(self, api_details: dict) -> dict[str, str]:
+    def make_backend_api_call(self, api_details: dict, token: str) -> dict[str, str]:
         """
         Makes API calls to the backend based on the classified intent's details.
         Handles multiple API types if present in api_details['api_type'].
@@ -227,13 +227,19 @@ class ChildMonitoringRAG:
                 url = url[:-1]
 
             print(f"Trying to call URL: {url}")
-
-            response = requests.get(url=url)
+            header = {
+                "Authorization": f"Bearer {token}" if token else "",
+            }
+            # Call the backend
+            response = requests.get(
+                url=url,
+                headers=header,
+            )
             results.append(response)
 
         return response.json()
 
-    def create_prompt(self, query: str, child_age: int) -> PromptValue:
+    def create_prompt(self, query: str, child_age: int, token: str) -> PromptValue:
         """
         Creates a formatted prompt for the LLM, combining children's data context and RAG context.
         """
@@ -245,7 +251,7 @@ class ChildMonitoringRAG:
         children_data_context = ""
         if intent == "child_performance_data":
             try:
-                children_data_context = self.make_backend_api_call(api_details)
+                children_data_context = self.make_backend_api_call(api_details, token)
                 print("Children's data context retrieved successfully.")
                 print(f"Children's data context: {children_data_context}")
             except Exception as e:
