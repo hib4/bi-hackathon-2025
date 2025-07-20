@@ -17,7 +17,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   final List<_OnboardingData> _onboardingSections = [
     _OnboardingData(
-      image: Assets.images.artboard.image(),
       title: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -49,8 +48,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ),
     ),
     _OnboardingData(
-      image: Assets.images.artboard.image(), // Replace with actual image
-      title:RichText(
+      title: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
           style: GoogleFonts.fredoka(
@@ -82,7 +80,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ),
     ),
     _OnboardingData(
-      image: Assets.images.artboard.image(), // Replace with actual image
       title: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -146,12 +143,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
       backgroundColor: const Color(0XFFFFF8E8),
       body: Stack(
         children: [
-          // Background image
-          Assets.images.artboard.image(
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
           PageView.builder(
             controller: _pageController,
             itemCount: _onboardingSections.length,
@@ -162,19 +153,32 @@ class _OnboardingPageState extends State<OnboardingPage> {
             },
             itemBuilder: (context, index) {
               final data = _onboardingSections[index];
-              return Padding(
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 90,
-                  left: 32,
-                  right: 32,
-                ),
-                child: Column(
-                  children: [
-                    data.title,
-                    16.vertical,
-                    data.subtitle,
-                  ],
-                ),
+              return Stack(
+                children: [
+                  [
+                    Assets.images.artboard1,
+                    Assets.images.artboard2,
+                    Assets.images.artboard3,
+                  ][index].image(
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).padding.top + 90,
+                      left: 32,
+                      right: 32,
+                    ),
+                    child: Column(
+                      children: [
+                        data.title,
+                        16.vertical,
+                        data.subtitle,
+                      ],
+                    ),
+                  ),
+                ],
               );
             },
           ),
@@ -262,12 +266,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
 class _OnboardingData {
   const _OnboardingData({
-    required this.image,
     required this.title,
     required this.subtitle,
   });
 
-  final Widget image;
   final Widget title;
   final Widget subtitle;
 }
