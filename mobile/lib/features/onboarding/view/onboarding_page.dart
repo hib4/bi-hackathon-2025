@@ -239,10 +239,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   24.vertical,
                   ElevatedButton(
                     onPressed: _onNext,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0XFFFF9F00),
-                      minimumSize: const Size(double.infinity, 56),
-                    ),
                     child: Text(
                       _currentIndex == _onboardingSections.length - 1
                           ? 'Mulai'
