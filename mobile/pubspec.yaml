@@ -24,6 +24,7 @@ dependencies:
   intl: ^0.20.2
   json_annotation: ^4.9.0
   logger: ^2.6.0
+  page_transition: ^2.2.1
 
 dev_dependencies:
   bloc_test: ^10.0.0
@@ -43,6 +44,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/mascots/
   generate: true
   uses-material-design: true
 
@@ -53,15 +55,15 @@ flutter_gen:
     flutter_svg: true
 
 flutter_native_splash:
-  color: "#FFFFF8"
+  color: "#FFF9ED"
   image: splash_screen.png
-  color_dark: "#FFFFF8"
+  color_dark: "#FFF9ED"
   image_dark: splash_screen.png
 
   android_12:
-    color: "#FFFFF8"
+    color: "#FFF9ED"
     image: splash_screen.png
-    color_dark: "#FFFFF8"
+    color_dark: "#FFF9ED"
     image_dark: splash_screen.png
 
   android: true

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 /// This extension adds two getters to the `double` class to easily create `SizedBox`
 /// widgets with either a vertical or horizontal dimension equal to the value of the `double`.
@@ -47,28 +48,40 @@ extension FunctionExtension<T> on T {
 }
 
 extension NavigatorContextExtension on BuildContext {
-  /// Pushes a new page onto the navigator stack.
+  /// Pushes a new page onto the navigator stack using PageTransition.
   Future<T?> push<T>(Widget page) {
     return Navigator.of(this).push<T>(
-      MaterialPageRoute(builder: (_) => page),
+      PageTransition(
+        child: page,
+        type: PageTransitionType.fade,
+        duration: const Duration(milliseconds: 300),
+      ),
     );
   }
 
-  /// Replaces the current page with a new one.
+  /// Replaces the current page with a new one using PageTransition.
   Future<T?> pushReplacement<T, TO>(Widget page, {TO? result}) {
     return Navigator.of(this).pushReplacement<T, TO>(
-      MaterialPageRoute(builder: (_) => page),
+      PageTransition(
+        child: page,
+        type: PageTransitionType.fade,
+        duration: const Duration(milliseconds: 300),
+      ),
       result: result,
     );
   }
 
-  /// Pushes a new page and removes all previous pages until predicate returns true.
+  /// Pushes a new page and removes all previous pages until predicate returns true, using PageTransition.
   Future<T?> pushAndRemoveUntil<T>(
     Widget page,
     bool Function(Route<dynamic>) predicate,
   ) {
     return Navigator.of(this).pushAndRemoveUntil<T>(
-      MaterialPageRoute(builder: (_) => page),
+      PageTransition(
+        child: page,
+        type: PageTransitionType.fade,
+        duration: const Duration(milliseconds: 300),
+      ),
       predicate,
     );
   }
