@@ -235,10 +235,10 @@ class ChildMonitoringRAG:
                 url=url,
                 headers=header,
             )
-            results.append(response)
-
-        return response.json()
-
+            results.append(response.content)
+        
+        return results
+        
     def create_prompt(self, query: str, child_age: int, token: str) -> PromptValue:
         """
         Creates a formatted prompt for the LLM, combining children's data context and RAG context.

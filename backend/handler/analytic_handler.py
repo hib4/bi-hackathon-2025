@@ -250,6 +250,10 @@ def _aggregate_timeline(
     if not any([time_unit, start_date, end_date]):
         return books
     
+    
+    def _to_utc_aware(dt):
+        return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt
+    
     # Filter books by start and end date if provided
     if start_date or end_date:
         start = datetime.strptime(start_date, "%Y-%m-%d").replace(tzinfo=timezone.utc) if start_date else None
@@ -257,13 +261,16 @@ def _aggregate_timeline(
         
         books = [
             book for book in books
-            if (not start or book.get("created_at", datetime.min) >= start) and
-               (not end or book.get("created_at", datetime.max) <= end)
+            if (not start or _to_utc_aware(book.get("created_at", datetime.min)) >= start)
+            and (not end or _to_utc_aware(book.get("created_at", datetime.max)) <= end)
         ]
     elif num_periods:
         now = datetime.now(timezone.utc)
         start = now - timedelta(weeks=num_periods) if time_unit == 'week' else now - timedelta(days=30 * num_periods)
-        books = [book for book in books if book.get("created_at", datetime.min) >= start]
+        books = [
+            book for book in books
+            if _to_utc_aware(book.get("created_at", datetime.min)) >= start
+        ]
 
     
     # Then aggregate per time unit from start to end

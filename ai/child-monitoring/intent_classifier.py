@@ -55,7 +55,7 @@ class IntentClassifier:
         1. general_query: Pertanyaan umum yang tidak spesifik tentang performa anak, seperti tips atau informasi umum yang masih berkaitan dengan literasi finansial.
         2. child_performance_data: Pertanyaan spesifik tentang performa anak dalam literasi finansial, yang bisa mencakup:
         - concept-performance: Untuk pertanyaan spesifik tentang performa anak di tema tertentu. (misalnya, "Bagaimana performa anak saya di konsep menabung?")
-        - performance-timeline: Untuk pertanyaan tentang perkembangan anak dalam periode waktu tertentu (mingguan, bulanan). (misalnya, "Tolong tunjukkan perkembangan anak saya bulan lalu.")
+        - performance-timeline: Untuk pertanyaan tentang perkembangan anak dalam periode waktu tertentu (mingguan, bulanan)
         - overall-statistics: Untuk pertanyaan umum tentang statistik performa anak secara keseluruhan atau ringkasan umum.Pertanyaan tentang ringkasan umum atau statistik performa anak (misalnya, "Berikan ringkasan umum tentang progres belajar anak saya.")
         Untuk niat child_performance_data, Anda perlu mengekstrak parameter berikut:
         - api_type: Jenis API yang relevan untuk pertanyaan ini (bisa 'concept-performance', 'performance-timeline', 'overall-statistics', atau null jika tidak relevan).
@@ -68,6 +68,12 @@ class IntentClassifier:
         
         Apabila niatnya adalah "general_query", Anda tidak perlu mengisi parameter API, cukup kembalikan nilai null atau array kosong untuk semua parameter API.
 
+        Apabila query merupakan gabungan dari beberapa niat di child_performance_data, Anda harus mengembalikan semua niat tersebut dalam bentuk list array yang terpisah.
+        Contoh:
+        - Jika pengguna bertanya tentang performa anak di tema "Menabung" dan performa anak dalam 1 minggu terakhir, Anda harus mengembalikan dua entri dalam array:
+        - Satu untuk 'concept-performance' dengan tema "Menabung" lalu juga kirim parameter waktu yang diperlukan (misalkan num_periods).
+        - Satu untuk 'performance-timeline' dengan time_unit 'week' dan num_periods 1.
+        
         Kembalikan respons dalam format JSON murni, tanpa teks atau markdown tambahan, dengan struktur berikut:
         ```json
         {{
@@ -81,7 +87,7 @@ class IntentClassifier:
                     "start_date": "string (YYYY-MM-DD, atau null)",
                     "end_date": "string (YYYY-MM-DD, atau null)",
                 }}
-                <tambahkan api_call lain jika dbutuhkan, dalam bentuk list array>
+                <tambahkan api_call lain jika dbutuhkan, dalam bentuk list array, apabila user juga meminta lebih dari satu API atau jangka waktu berbeda>
             ]
         }}
         ```
@@ -117,6 +123,8 @@ class IntentClassifier:
         try:
             response = self.llm.invoke(formatted_prompt)
             intent_data = json.loads(response.content.strip()) # type: ignore
+            # Print for debugging
+            print(f"Intent classification result: {intent_data}")
             return intent_data
         except Exception as e:
             print(f"An unexpected error occurred during intent classification: {e}")
