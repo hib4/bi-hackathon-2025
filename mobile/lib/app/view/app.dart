@@ -8,14 +8,18 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Kanca',
-      theme: AppThemeData.themeData().themeData,
-      darkTheme: AppThemeData.themeData().themeData,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      debugShowCheckedModeBanner: false,
-      home: const OnboardingPage(),
+    return AppTheme(
+      colorTheme: AppColors.colors(),
+      textTheme: AppTextStyles.textStyles(),
+      child: MaterialApp(
+        title: 'Kanca',
+        theme: AppThemeData.themeData().themeData,
+        darkTheme: AppThemeData.themeData().themeData,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        debugShowCheckedModeBanner: false,
+        home: const OnboardingPage(),
+      ),
     );
   }
 }

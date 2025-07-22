@@ -61,86 +61,86 @@ class AppColors {
   factory AppColors.colors() {
     // Primary
     final primary = {
-      50: const Color(0xFFFFF8E8),
-      100: const Color(0xFFFFE6A0),
-      200: const Color(0xFFFFD36A),
-      300: const Color(0xFFFFB800),
-      400: const Color(0xFFFF9F00),
-      500: const Color(0xFFFF8C00),
-      600: const Color(0xFFC46A00),
-      700: const Color(0xFF8C4B00),
-      800: const Color(0xFF663600),
-      900: const Color(0xFF402200),
+      50: const Color(0xFFFFF5E6),
+      100: const Color(0xFFFFE1B0),
+      200: const Color(0xFFFFD38A),
+      300: const Color(0xFFFFBF54),
+      400: const Color(0xFFFFB233),
+      500: const Color(0xFFFF9F00),
+      600: const Color(0xFFE89100),
+      700: const Color(0xFFB57100),
+      800: const Color(0xFF8C5700),
+      900: const Color(0xFF6B4300),
     };
 
     // Secondary
     final secondary = {
-      50: const Color(0xFFFFE6E6),
-      100: const Color(0xFFFFB3B3),
-      200: const Color(0xFFFF8C8C),
-      300: const Color(0xFFFF6666),
-      400: const Color(0xFFFF3D3D),
-      500: const Color(0xFFE62E2E),
-      600: const Color(0xFFB21F1F),
-      700: const Color(0xFF8C1515),
-      800: const Color(0xFF660D0D),
-      900: const Color(0xFF400606),
+      50: const Color(0xFFFFF1EF),
+      100: const Color(0xFFFFD2CE),
+      200: const Color(0xFFFFBDB6),
+      300: const Color(0xFFFF9F95),
+      400: const Color(0xFFFF8C81),
+      500: const Color(0xFFFF6F61),
+      600: const Color(0xFFE86558),
+      700: const Color(0xFFB54F45),
+      800: const Color(0xFF8C3D35),
+      900: const Color(0xFF6B2F29),
     };
 
     // Support
     final support = {
-      50: const Color(0xFFFFF0F5),
-      100: const Color(0xFFFFD6E7),
-      200: const Color(0xFFFFB3CF),
-      300: const Color(0xFFFF8CB8),
-      400: const Color(0xFFFF66A1),
-      500: const Color(0xFFE64D8C),
-      600: const Color(0xFFB23A6B),
-      700: const Color(0xFF8C2C52),
-      800: const Color(0xFF661F39),
-      900: const Color(0xFF401226),
+      50: const Color(0xFFFFF7F8),
+      100: const Color(0xFFFFE7EA),
+      200: const Color(0xFFFFDCDF),
+      300: const Color(0xFFFFCCD1),
+      400: const Color(0xFFFFC2C8),
+      500: const Color(0xFFFFB3BA),
+      600: const Color(0xFFE8A3A9),
+      700: const Color(0xFFB57F84),
+      800: const Color(0xFF8C6266),
+      900: const Color(0xFF6B4B4E),
     };
 
     // Dark Accent
     final darkAccent = {
-      50: const Color(0xFFE8E6F8),
-      100: const Color(0xFFC6C1E7),
-      200: const Color(0xFFA39DD6),
-      300: const Color(0xFF8079C5),
-      400: const Color(0xFF5D55B4),
-      500: const Color(0xFF4B4291),
-      600: const Color(0xFF3A326E),
-      700: const Color(0xFF2C254B),
-      800: const Color(0xFF1F1930),
-      900: const Color(0xFF120D1A),
+      50: const Color(0xFFEBEAEF),
+      100: const Color(0xFFC2BFCC),
+      200: const Color(0xFFA49FB3),
+      300: const Color(0xFF7A7490),
+      400: const Color(0xFF61597B),
+      500: const Color(0xFF392F5A),
+      600: const Color(0xFF342B52),
+      700: const Color(0xFF282140),
+      800: const Color(0xFF1F1A32),
+      900: const Color(0xFF181426),
     };
 
     // Neutral
     final neutral = {
-      50: const Color(0xFFFAFAFA),
-      100: const Color(0xFFF5F5F5),
-      200: const Color(0xFFF0F0F0),
-      300: const Color(0xFFE0E0E0),
-      400: const Color(0xFFD6D6D6),
-      500: const Color(0xFFBDBDBD),
-      600: const Color(0xFFA3A3A3),
-      700: const Color(0xFF8A8A8A),
-      800: const Color(0xFF707070),
-      900: const Color(0xFF575757),
+      50: const Color(0xFFFFFEFD),
+      100: const Color(0xFFFFFDF9),
+      200: const Color(0xFFFFFCF7),
+      300: const Color(0xFFFFFBF3),
+      400: const Color(0xFFFFFAF1),
+      500: const Color(0xFFFFF9ED),
+      600: const Color(0xFFE8E3D8),
+      700: const Color(0xFFB5B1A8),
+      800: const Color(0xFF8C8982),
+      900: const Color(0xFF6B6964),
     };
 
     // Grey
     final grey = {
-      50: const Color(0xFFF5F5F5),
-      100: const Color(0xFFE0E0E0),
-      200: const Color(0xFFCCCCCC),
-      300: const Color(0xFFB3B3B3),
-      400: const Color(0xFF999999),
-      500: const Color(0xFF808080),
-      600: const Color(0xFF666666),
-      700: const Color(0xFF4D4D4D),
-      800: const Color(0xFF333333),
-      900: const Color(0xFF232323),
+      50: const Color(0xFFEBEBEB),
+      100: const Color(0xFFC1C1C1),
+      200: const Color(0xFFA3A3A3),
+      300: const Color(0xFF797979),
+      400: const Color(0xFF5F5F5F),
+      500: const Color(0xFF373737),
+      600: const Color(0xFF323232),
+      700: const Color(0xFF272727),
+      800: const Color(0xFF1E1E1E),
+      900: const Color(0xFF171717),
     };
 
     return AppColors(
@@ -183,6 +183,15 @@ class AppTextStyles {
     required this.body,
     required this.caption,
     required this.micro,
+    required this.lexendH1,
+    required this.lexendH2,
+    required this.lexendH3,
+    required this.lexendH4,
+    required this.lexendH5,
+    required this.lexendLargeBody,
+    required this.lexendBody,
+    required this.lexendCaption,
+    required this.lexendMicro,
   });
 
   factory AppTextStyles.textStyles() {
@@ -190,141 +199,109 @@ class AppTextStyles {
       h1: GoogleFonts.fredoka(
         fontSize: 80,
         fontWeight: FontWeight.w600, // SemiBold
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
       h2: GoogleFonts.fredoka(
         fontSize: 61,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
       h3: GoogleFonts.fredoka(
         fontSize: 47,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
       h4: GoogleFonts.fredoka(
         fontSize: 36,
         fontWeight: FontWeight.w600, // SemiBold
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
       h5: GoogleFonts.fredoka(
         fontSize: 27,
         fontWeight: FontWeight.w500, // Medium
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
       largeBody: GoogleFonts.fredoka(
         fontSize: 21,
         fontWeight: FontWeight.w600, // SemiBold
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
       body: GoogleFonts.fredoka(
         fontSize: 16,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
       caption: GoogleFonts.fredoka(
         fontSize: 12,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
       micro: GoogleFonts.fredoka(
         fontSize: 9,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
-    );
-  }
-
-  final TextStyle h1;
-  final TextStyle h2;
-  final TextStyle h3;
-  final TextStyle h4;
-  final TextStyle h5;
-  final TextStyle largeBody;
-  final TextStyle body;
-  final TextStyle caption;
-  final TextStyle micro;
-}
-
-///////////////////////////
-///   Lexend TextStyle  ///
-///////////////////////////
-class AppLexendTextStyles {
-  AppLexendTextStyles({
-    required this.h1,
-    required this.h2,
-    required this.h3,
-    required this.h4,
-    required this.h5,
-    required this.largeBody,
-    required this.body,
-    required this.caption,
-    required this.micro,
-  });
-
-  factory AppLexendTextStyles.textStyles() {
-    return AppLexendTextStyles(
-      h1: GoogleFonts.lexend(
+      lexendH1: GoogleFonts.lexend(
         fontSize: 80,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
-      h2: GoogleFonts.lexend(
+      lexendH2: GoogleFonts.lexend(
         fontSize: 61,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
-      h3: GoogleFonts.lexend(
+      lexendH3: GoogleFonts.lexend(
         fontSize: 47,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
-      h4: GoogleFonts.lexend(
+      lexendH4: GoogleFonts.lexend(
         fontSize: 36,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
-      h5: GoogleFonts.lexend(
+      lexendH5: GoogleFonts.lexend(
         fontSize: 27,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
-      largeBody: GoogleFonts.lexend(
+      lexendLargeBody: GoogleFonts.lexend(
         fontSize: 21,
         fontWeight: FontWeight.w600, // SemiBold
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
-      body: GoogleFonts.lexend(
+      lexendBody: GoogleFonts.lexend(
         fontSize: 16,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
-      caption: GoogleFonts.lexend(
+      lexendCaption: GoogleFonts.lexend(
         fontSize: 12,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
-      micro: GoogleFonts.lexend(
+      lexendMicro: GoogleFonts.lexend(
         fontSize: 9,
         fontWeight: FontWeight.w400, // Regular
-        height: 1,
+        height: 1.5,
         color: Colors.black,
       ),
     );
@@ -339,6 +316,15 @@ class AppLexendTextStyles {
   final TextStyle body;
   final TextStyle caption;
   final TextStyle micro;
+  final TextStyle lexendH1;
+  final TextStyle lexendH2;
+  final TextStyle lexendH3;
+  final TextStyle lexendH4;
+  final TextStyle lexendH5;
+  final TextStyle lexendLargeBody;
+  final TextStyle lexendBody;
+  final TextStyle lexendCaption;
+  final TextStyle lexendMicro;
 }
 
 /// The theme data for this application.
@@ -382,7 +368,7 @@ class AppThemeData {
       cupertinoOverrideTheme: const CupertinoThemeData(
         brightness: Brightness.light,
       ),
-      scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: appColors.neutral[500],
       tabBarTheme: const TabBarThemeData(
         indicatorColor: Colors.black,
       ),

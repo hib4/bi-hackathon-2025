@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kanca/core/core.dart';
 import 'package:kanca/features/auth/auth.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/utils.dart';
@@ -128,7 +129,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   void _finishOnboarding() {
-    context.pushAndRemoveUntil(const LoginPage(), (route) => false);
+    context.pushAndRemoveUntil(const _OnBoardingLoading(), (route) => false);
   }
 
   @override
@@ -241,7 +242,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     onPressed: _onNext,
                     child: Text(
                       _currentIndex == _onboardingSections.length - 1
-                          ? 'Mulai'
+                          ? 'Yuk Mulai!'
                           : 'Lanjut',
                       style: const TextStyle(
                         fontSize: 16,
@@ -268,4 +269,57 @@ class _OnboardingData {
 
   final Widget title;
   final Widget subtitle;
+}
+
+class _OnBoardingLoading extends StatefulWidget {
+  const _OnBoardingLoading();
+
+  @override
+  State<_OnBoardingLoading> createState() => __OnBoardingLoadingState();
+}
+
+class __OnBoardingLoadingState extends State<_OnBoardingLoading> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        context.pushAndRemoveUntil(const LoginPage(), (route) => false);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final textTheme = context.textTheme;
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          RichText(
+            text: TextSpan(
+              style: textTheme.lexendLargeBody,
+              text: 'Kamu tahu nggak? Kalau... ',
+              children: [
+                TextSpan(
+                  text: 'pilihanmu bisa bikin cerita jadi luar biasa. ',
+                  style: textTheme.lexendLargeBody.copyWith(
+                    color: colors.primary[500],
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const TextSpan(
+                  text: 'Yuk, kita mulai petualangan seru ini!',
+                ),
+              ]
+            ),
+            textAlign: TextAlign.center,
+          ).withPadding(left: 24, right: 24),
+          84.vertical,
+          Assets.mascots.onboardingLoading.image().withPadding(left: 50),
+        ],
+      ),
+    );
+  }
 }
