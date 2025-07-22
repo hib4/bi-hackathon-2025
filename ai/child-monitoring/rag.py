@@ -236,9 +236,15 @@ class ChildMonitoringRAG:
                 headers=header,
             )
             results.append(response)
-
-        return response.json()
-
+        
+        # Convert results to json strings
+        results_json = {}
+        for i, api_detail in enumerate(api_details):
+            api_type = api_detail.get("api_type")
+            if api_type:
+                results_json[api_type] = results[i].json()
+        return results_json
+        
     def create_prompt(self, query: str, child_age: int, token: str) -> PromptValue:
         """
         Creates a formatted prompt for the LLM, combining children's data context and RAG context.
