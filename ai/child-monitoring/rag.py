@@ -235,15 +235,9 @@ class ChildMonitoringRAG:
                 url=url,
                 headers=header,
             )
-            results.append(response)
+            results.append(response.content)
         
-        # Convert results to json strings
-        results_json = {}
-        for i, api_detail in enumerate(api_details):
-            api_type = api_detail.get("api_type")
-            if api_type:
-                results_json[api_type] = results[i].json()
-        return results_json
+        return results
         
     def create_prompt(self, query: str, child_age: int, token: str) -> PromptValue:
         """
