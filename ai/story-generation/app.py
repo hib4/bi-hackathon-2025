@@ -47,7 +47,7 @@ class Scene(BaseModel):
 class StoryResponse(BaseModel):
     user_id: str
     title: str
-    tema: List[str]
+    theme: List[str]
     language: str
     status: str
     age_group: int
@@ -115,7 +115,7 @@ def validate_story_content(story_data: dict, user_id: str, age: int):
     required_top_level_fields = {
         "user_id": user_id,
         "title": "Untitled Story",
-        "tema": [],
+        "theme": [],
         "language": "indonesian",
         "status": "in_progress",
         "age_group": age,  # Keep as int since you changed it
