@@ -197,9 +197,9 @@ class FinancialLiteracyRAG:
         Initialize the complete RAG system
         """
         print("Initializing RAG system...")
-
+        print(f"Data directory: {self.data_dir}")
         # Check if the persist directory
-        if os.path.exists(self.persist_directory):
+        if os.path.exists(self.persist_directory) and not rebuild:
             self.vector_store = Chroma(
                 persist_directory=self.persist_directory,
                 embedding_function=self.embeddings,

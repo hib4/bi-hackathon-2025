@@ -85,7 +85,7 @@ rag = FinancialLiteracyRAG(
     data_dir='./knowledge_base',
     persist_directory='./chroma_db'
 )
-rag.initialize_rag()
+rag.initialize_rag(rebuild=True)
 
 chat_model = ChatOpenAI(
     model="gpt-4o", 
