@@ -1,12 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:kanca/core/core.dart';
+import 'package:kanca/features/auth/view/login_page.dart';
 import 'package:kanca/features/test_page.dart';
 import 'package:kanca/gen/assets.gen.dart';
 import 'package:kanca/utils/extensions/extensions.dart';
+import 'package:kanca/widgets/widgets.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -87,241 +90,222 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+    final textTheme = context.textTheme;
     return Scaffold(
-      backgroundColor: const Color(0XFFFFF8E8),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              48.vertical,
-              Center(
-                child: Assets.icons.kanca.image(
-                  width: 90,
-                  height: 90,
-                ),
-              ),
-              32.vertical,
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: GoogleFonts.fredoka(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0XFF373737),
-                  ),
-                  children: const [
-                    TextSpan(text: 'Buat Akun '),
-                    TextSpan(
-                      text: 'Kanca!',
-                      style: TextStyle(color: Color(0XFFFF9F00)),
-                    ),
-                  ],
-                ),
-              ),
-              12.vertical,
-              Text(
-                'Daftar untuk mulai petualangan seru bersama Kanca!',
-                style: GoogleFonts.fredoka(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              32.vertical,
-              TextField(
-                controller: _nameController,
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  labelText: 'Nama Lengkap',
-                  labelStyle: GoogleFonts.fredoka(color: Colors.black54),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.9),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.person_outline,
-                    color: Color(0XFFFF9F00),
-                  ),
-                ),
-              ),
-              20.vertical,
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: GoogleFonts.fredoka(color: Colors.black54),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.9),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.email_outlined,
-                    color: Color(0XFFFF9F00),
-                  ),
-                ),
-              ),
-              20.vertical,
-              TextField(
-                controller: _passwordController,
-                obscureText: _obscurePassword,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  labelStyle: GoogleFonts.fredoka(color: Colors.black54),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.9),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.lock_outline,
-                    color: Color(0XFFFF9F00),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                      color: Colors.black38,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              20.vertical,
-              TextField(
-                controller: _confirmPasswordController,
-                obscureText: _obscureConfirmPassword,
-                decoration: InputDecoration(
-                  labelText: 'Konfirmasi Password',
-                  labelStyle: GoogleFonts.fredoka(color: Colors.black54),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.9),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.lock_outline,
-                    color: Color(0XFFFF9F00),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureConfirmPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                      color: Colors.black38,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscureConfirmPassword = !_obscureConfirmPassword;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              32.vertical,
-              SizedBox(
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _register,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0XFFFF9F00),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    textStyle: GoogleFonts.fredoka(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    elevation: 0,
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(Colors.white),
-                        )
-                      : const Text(
-                          'Daftar',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                ),
-              ),
-              24.vertical,
-              Row(
-                children: [
-                  const Expanded(child: Divider(thickness: 1)),
-                  12.horizontal,
-                  Text('atau', style: GoogleFonts.fredoka()),
-                  12.horizontal,
-                  const Expanded(child: Divider(thickness: 1)),
-                ],
-              ),
-              24.vertical,
-              SizedBox(
-                height: 56,
-                child: OutlinedButton.icon(
-                  onPressed: _isLoading ? null : _registerWithGoogle,
-                  icon: Assets.icons.google.svg(
-                    width: 24,
-                    height: 24,
-                  ),
-                  label: Text(
-                    'Daftar dengan Google',
-                    style: GoogleFonts.fredoka(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0XFFFF9F00)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    backgroundColor: Colors.white.withOpacity(0.95),
-                    elevation: 0,
-                  ),
-                ),
-              ),
-              32.vertical,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Sudah punya akun?',
-                    style: GoogleFonts.fredoka(color: Colors.black54),
-                  ),
-                  TextButton(
-                    onPressed: _goToLogin,
-                    style: TextButton.styleFrom(
-                      foregroundColor: const Color(0XFFFF9F00),
-                    ),
+      backgroundColor: colors.primary[500],
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
                     child: Text(
-                      'Login',
-                      style: GoogleFonts.fredoka(
-                        color: const Color(0XFFFF9F00),
-                        fontWeight: FontWeight.bold,
+                      'DAFTAR',
+                      style: textTheme.h1.copyWith(
+                        color: Colors.white,
+                        fontSize: 105,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                ],
-              ),
-              24.vertical,
-            ],
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
+                    ),
+                    decoration: BoxDecoration(
+                      color: colors.neutral[500],
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(24),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Email',
+                          style: textTheme.caption,
+                        ),
+                        4.vertical,
+                        KancaTextField(
+                          controller: _emailController,
+                          textInputType: TextInputType.emailAddress,
+                          label: 'Email',
+                        ),
+                        16.vertical,
+                        Text(
+                          'Password',
+                          style: textTheme.caption,
+                        ),
+                        4.vertical,
+                        KancaTextField(
+                          controller: _passwordController,
+                          textInputType: TextInputType.visiblePassword,
+                          label: 'Password',
+                          isPassword: true,
+                        ),
+                        16.vertical,
+                        Text(
+                          'Konfirmasi Password',
+                          style: textTheme.caption,
+                        ),
+                        4.vertical,
+                        KancaTextField(
+                          controller: _confirmPasswordController,
+                          textInputType: TextInputType.visiblePassword,
+                          label: 'Konfirmasi Password',
+                          isPassword: true,
+                        ),
+                        32.vertical,
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: const Text('Mulai Sekarang'),
+                        ),
+                        // Or
+                        16.vertical,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Divider(
+                                color: Colors.black.withOpacity(0.4),
+                                thickness: 1,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: Text(
+                                'Atau',
+                                style: textTheme.caption,
+                              ),
+                            ),
+                            Expanded(
+                              child: Divider(
+                                color: Colors.black.withOpacity(0.4),
+                                thickness: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        24.vertical,
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Assets.icons.google.svg(
+                                width: 24,
+                                height: 24,
+                              ),
+                              10.horizontal,
+                              const Text('Lanjutkan dengan Google'),
+                            ],
+                          ),
+                        ),
+                        32.vertical,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Sudah punya akun?',
+                              style: textTheme.lexendCaption.copyWith(
+                                fontSize: 14,
+                              ),
+                            ),
+                            4.horizontal,
+                            InkWell(
+                              onTap: _goToLogin,
+                              child: Text(
+                                'Masuk!',
+                                style: textTheme.lexendCaption.copyWith(
+                                  color: colors.primary[500],
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                style: textTheme.lexendCaption.copyWith(
+                                  color: colors.grey[300],
+                                  fontSize: 14,
+                                ),
+                                children: [
+                                  const TextSpan(
+                                    text:
+                                        'Dengan menggunakan Kanca, Anda setuju pada ',
+                                  ),
+                                  TextSpan(
+                                    text: 'Ketentuan Layanan',
+                                    style: textTheme.lexendCaption.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      decoration: TextDecoration.underline,
+                                      color: Colors.black,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        // TODO: Open Terms of Service link
+                                      },
+                                  ),
+                                  const TextSpan(
+                                    text: ' dan ',
+                                  ),
+                                  TextSpan(
+                                    text: 'Kebijakan Privasi',
+                                    style: textTheme.lexendCaption.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      decoration: TextDecoration.underline,
+                                      color: Colors.black,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        // TODO: Open Privacy Policy link
+                                      },
+                                  ),
+                                  const TextSpan(
+                                    text: ' kami.',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+          Positioned(
+            top: 145,
+            left: 0,
+            right: 0,
+            child: Assets.mascots.auth.image(
+              width: 200,
+              height: 200,
+            ),
+          ),
+        ],
       ),
     );
   }
