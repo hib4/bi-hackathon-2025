@@ -4,6 +4,7 @@ class Settings(BaseSettings):
     HOST: str
     PORT: int
     BOOK_STORY_GENERATION_URL: str
+    CHILD_MONITORING_URL: str
     MONGODB_URL: str
     MONGODB_DB: str
     SEALION_API_KEY: str

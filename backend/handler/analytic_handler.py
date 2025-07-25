@@ -459,7 +459,7 @@ async def get_overall_statistic(current_user):
     child_analytic = _aggregate_child_analytic(books_dict)
     return child_analytic["overall_stats"]
 
-ai_url = settings.BOOK_STORY_GENERATION_URL
+ai_url = settings.CHILD_MONITORING_URL
 async def chat_stream(
         current_user,
         message: str,
