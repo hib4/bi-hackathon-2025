@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
     # Initialize RAG system
     print("Initializing RAG system...")
     rag_system = ChildMonitoringRAG(
-        data_dir=os.getenv("PDF_DATA_PATH", "data/financial_literacy_guide.pdf"),
+        data_dir=os.getenv("DATA_DIR", "knowledge_base/financial_literacy_guide.pdf"),
         persist_directory=os.getenv("VECTOR_DB_PATH", "vectordb"),
         embedding_model_name="text-embedding-3-small",
         llm_model_name="gpt-4o",
@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI):
     )
     
     # Initialize the RAG system (this will create/load vector database)
-    rag_system.initialize_rag(rebuild=False)
+    rag_system.initialize_rag(rebuild=True)
     print("RAG system initialized successfully!")
     
     yield
@@ -218,7 +218,7 @@ async def system_status():
     status = {
         "rag_system_initialized": rag_system is not None,
         "vector_db_path": os.getenv("VECTOR_DB_PATH", "vectordb"),
-        "pdf_data_path": os.getenv("DATA_DIR", "data/financial_literacy_guide.pdf"),
+        "knowledge_dir": os.getenv("DATA_DIR", "data/financial_literacy_guide.pdf"),
         "backend_api_url": os.getenv("BACKEND_API_BASE_URL", "http://localhost:8000/api/v1/analytic"),
         "main_llm_model": "gpt-4o",
         "embedding_model": "text-embedding-3-small"
@@ -246,6 +246,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "app:app",
         host="0.0.0.0",
-        port=8001,
+        port=8002,
         log_level="info"
     )
