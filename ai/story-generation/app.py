@@ -27,7 +27,7 @@ class Character(BaseModel):
 
 class Choice(BaseModel):
     choice: str
-    teks: str
+    content: str
     moral_value: str
     point: int
     next_scene: int
@@ -217,7 +217,7 @@ def validate_story_content(story_data: dict, user_id: str, age: int):
             for j, choice in enumerate(branch):
                 choice_required_fields = {
                     "choice": "baik" if j == 0 else "buruk",
-                    "teks": "",
+                    "content": "",
                     "moral_value": "",
                     "point": 0,
                     "next_scene": scene["scene_id"] + 1
