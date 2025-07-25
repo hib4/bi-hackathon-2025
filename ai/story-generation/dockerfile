@@ -1,0 +1,35 @@
+FROM python:3.10.11-slim
+
+WORKDIR /app
+
+# Install build tools and wget to compile SQLite
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    wget \
+    libreadline-dev \
+    libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Build and install SQLite 3.41.2
+RUN wget https://www.sqlite.org/2023/sqlite-autoconf-3410200.tar.gz && \
+    tar -xzf sqlite-autoconf-3410200.tar.gz && \
+    cd sqlite-autoconf-3410200 && \
+    ./configure --prefix=/usr/local && \
+    make && make install && \
+    cd .. && rm -rf sqlite-autoconf-3410200*
+
+# Ensure Python uses the new SQLite
+ENV LD_LIBRARY_PATH=/usr/local/lib
+ENV PATH="/usr/local/bin:$PATH"
+
+# Verify the SQLite version
+RUN sqlite3 --version
+
+COPY . .
+
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 8001
+
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8001"]

@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  story-generation:
+    build:
+      context: ./ai/story-generation
+      dockerfile: Dockerfile
+    env_file: ./ai/.env
+    ports:
+      - "8001:8001"
+    restart: always
+    networks:
+      - ai-network
+
+  child-monitoring:
+    build:
+      context: ./ai/child-monitoring
+      dockerfile: Dockerfile
+    env_file: ./ai/.env
+    ports:
+      - "8002:8002"
+    restart: always
+    networks:
+      - ai-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    restart: always
+    networks:
+      - ai-network
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    restart: always
+    networks:
+      - ai-network
+
+networks:
+  ai-network:
+    driver: bridge
