@@ -113,13 +113,14 @@ class FinancialLiteracyRAG:
                 "story_flow": {"total_scene": 0, "decision_point": [], "ending": []},
                 "cover_img_url": None,
                 "cover_img_description": "<buat deskripsi gambar sampul dalam bahasa Inggris>",
-                "description": "<buat deskripsi cerita dalam bahasa Inggris>",
+                "description": "<buat deskripsi cerita dalam bahasa Indonesia>",
                 "estimated_reading_time": "<perkiraan waktu membaca dalam bahasa Indonesia (dalam detik (integer))>",
                 "characters": [
                     {
                         "name": "<buat nama karakter dalam bahasa Indonesia>",
                         "description": "<buat deskripsi karakter dalam bahasa Inggris, masukkan ciri fisik, sifat, dan peran dalam cerita>",
-                    }
+                    },
+                    "<tambah karakter lain jika diperlukan sesuai dengan format di atas, minimal 2 karakter, maksimal 5 karakter. Pastikan semua karakter di cerita sudah didefinisikan di sini, termasuk karakter utama dan pendukung>",
                 ],
                 "scene": [
                     {
